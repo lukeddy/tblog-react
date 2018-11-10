@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {BrowserRouter as Router,Route} from 'react-router-dom';
+import {BrowserRouter as Router,Route,Redirect} from 'react-router-dom';
 import Home from './components/Home';
 import News from './components/News';
 import About from './components/About';
@@ -12,9 +12,10 @@ class App extends Component {
       <Router>
         <div>
             <MyNav/>
+            <Redirect from="/" component={Home}/>
             <Route exact path="/" component={Home}/>
-            <Route  path="/home" component={Home}/>
-            <Route  path="/news" component={News}/>
+            <Route path="/home" component={Home}/>
+            <Route path="/news" component={News}/>
             <Route path="/about" component={About}/>
         </div>
       </Router>
