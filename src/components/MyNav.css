@@ -1,0 +1,9 @@
+.logo {
+    display: block;
+    width: 120px;
+    height: 53px;
+    background-size: cover;
+    background-image: url(../assets/tblog-logo.png);
+    margin-left: 36px;
+    margin-top: -18px;
+}
