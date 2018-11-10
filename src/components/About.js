@@ -9,8 +9,8 @@ class About extends Component {
     render() {
         return (
             <Grid>
-                <img src={banner} alt="" className="banner"/>
-                <Jumbotron>
+                {/*<img src={banner} alt="" className="banner"/>*/}
+                <Jumbotron className="banner">
                     <h2>我是关于页面</h2>
                     <p>我是内容，我是内容，我是内容，我是内容，我是内容，我是内容，</p>
                 </Jumbotron>
