@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import './Nav.css'
 import {Link} from "react-router-dom";
-import {NavItem} from "react-bootstrap";
 
 class Nav extends Component{
 
@@ -14,9 +13,7 @@ class Nav extends Component{
                         <span className="icon-bar"></span>
                         <span className="icon-bar"></span>
                     </button>
-                    <a className="navbar-brand hidden-sm" href="/">
-                        <span className="tblog-leaf-logo">&nbsp;</span>
-                    </a>
+                    <Link to="/" className="navbar-brand hidden-sm"><span className="tblog-leaf-logo">&nbsp;</span></Link>
                     <form className="navbar-form pull-right" action="/search">
                         <div className="form-group hidden-xs">
                             <div className="input-group">
@@ -28,10 +25,10 @@ class Nav extends Component{
                 </div>
                 <div className="navbar-collapse collapse pull-right">
                     <ul className="nav navbar-nav">
-                        <li><a href="/">首页</a></li>
-                        <li><a href="/about">关于</a></li>
-                        <li><a href="/register">注册</a></li>
-                        <li><a href="/login">登陆</a></li>
+                        <li><Link to='/'>首页</Link></li>
+                        <li><Link to="/about">关于</Link></li>
+                        <li><Link to="/register">注册</Link></li>
+                        <li><Link to="/login">登陆</Link></li>
                     </ul>
                 </div>
             </div>
