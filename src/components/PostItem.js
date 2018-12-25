@@ -1,4 +1,6 @@
 import React from "react";
+import PostDetail from "./PostDetail";
+import {Link} from "react-router-dom";
 
 class PostItem extends React.Component{
 
@@ -29,8 +31,9 @@ class PostItem extends React.Component{
                                 </ul>
                             </div>
                             <div className="title-row">
-                                <a className="title" href="/detail"
-                                   target="_blank">Java 侵权案进入尾声，谷歌不服判决要向最高法院上诉</a>
+                                <Link to="/detail" className="title" target="_blank">
+                                    Java 侵权案进入尾声，谷歌不服判决要向最高法院上诉
+                                </Link>
                             </div>
                             <div className="desc-row">据外媒报道，Google 和 Oracle 长达 8 年的 Java
                                 版权之争可能即将结束。今年的3月27日，美国联邦巡回上诉法院裁决 Google 使用 Java 开发 Android 系统的行为侵犯了

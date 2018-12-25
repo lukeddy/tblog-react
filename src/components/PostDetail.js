@@ -6,6 +6,7 @@ import comment from '../assets/ico/comment.svg'
 import collect from '../assets/ico/collect.svg'
 import share from '../assets/ico/share.svg'
 import Comment from "./Comment";
+import {Link} from "react-router-dom";
 
 class PostDetail extends React.Component{
 
@@ -14,7 +15,7 @@ class PostDetail extends React.Component{
             <div className="container main">
                 <div className="col-md-9" id="content">
                     <ul className="breadcrumb">
-                        <li><a href="/"><i className="glyphicon glyphicon-home"></i>主页</a><span
+                        <li><Link to="/">主页</Link><span
                             className="divider"></span></li>
                         <li><a href="/tblog/?tab=java">Java</a><span className="divider"></span></li>
                     </ul>

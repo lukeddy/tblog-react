@@ -1,5 +1,6 @@
 import React from "react";
 import Advertise from "./Advertise";
+import {Link} from "react-router-dom";
 
 class Register extends React.Component{
 
@@ -8,7 +9,7 @@ class Register extends React.Component{
             <div className="container main">
                 <div className="col-md-9">
                     <ul className="breadcrumb">
-                        <li><a href="/">主页</a><span className="divider"></span></li>
+                        <li><Link to="/">主页</Link><span className="divider"></span></li>
                         <li className="active">注册</li>
                     </ul>
                     <div className="row wrapper">
