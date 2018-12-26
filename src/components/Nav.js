@@ -1,10 +1,22 @@
 import React, {Component} from 'react'
 import './Nav.css'
 import {Link} from "react-router-dom";
+import {connect} from 'react-redux';
+import {logout} from '../actions/authActions';
+import PropTypes from 'prop-types';
 
 class Nav extends Component{
 
+    logout(e) {
+        e.preventDefault();
+        this.props.logout();
+    }
+
     render(){
+        console.log(this.props);
+        const {isAuthenticated}=this.props.auth;
+        console.log(isAuthenticated);
+
         return (
             <div className="navbar navbar-inverse navbar-fixed-top">
                 <div className="navbar-header">
@@ -27,8 +39,9 @@ class Nav extends Component{
                     <ul className="nav navbar-nav">
                         <li><Link to='/'>首页</Link></li>
                         <li><Link to="/about">关于</Link></li>
-                        <li><Link to="/register">注册</Link></li>
-                        <li><Link to="/login">登陆</Link></li>
+                        {!isAuthenticated && <li><Link to="/register">注册</Link></li>}
+                        {!isAuthenticated && <li><Link to="/login">登陆</Link></li>}
+                        {isAuthenticated && <li><Link to="/logout" onClick={this.logout.bind(this)}>登出</Link></li>}
                     </ul>
                 </div>
             </div>
@@ -36,4 +49,15 @@ class Nav extends Component{
     }
 }
 
-export default Nav
+Nav.propTypes = {
+    auth: PropTypes.object.isRequired,
+    logout: PropTypes.func.isRequired
+}
+
+function mapStateToProps(state) {
+    return {
+        auth: state.authReducer
+    };
+}
+
+export default connect(mapStateToProps,{logout})(Nav)

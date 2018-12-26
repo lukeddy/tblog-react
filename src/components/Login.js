@@ -3,7 +3,7 @@ import Advertise from "./Advertise";
 import {Link} from "react-router-dom";
 import InlineError from "./common/InlineError";
 import {connect} from 'react-redux';
-import {login} from '../actions/authActions';
+import {doLogin} from '../actions/authActions';
 import PropTypes from 'prop-types';
 
 class Login extends React.Component{
@@ -35,13 +35,19 @@ class Login extends React.Component{
         console.log(errors);
 
         if (Object.keys(errors).length === 0) {
-            //submit data
-            console.log(this.state)
-            this.props.login(this.state.data).then(resp=>{
-                console.log(resp);
-                //this.props.history.push("/home")
+            this.props.doLogin(this.state.data).then((response)=>{
+                if(response.data.status){
+                    this.props.history.push("/home");
+                }else{
+                    const errors = {};
+                    errors.serverError=response.data.msg;
+                    this.setState({errors});
+                }
             }).catch(error=>{
                 console.log(error);
+                // const errors = {};
+                // errors.serverError=error.toString();
+                // this.setState({errors});
             });
         }
     }
@@ -66,6 +72,7 @@ class Login extends React.Component{
                     <div className="row wrapper">
                         <div className="col-sm-6 col-sm-offset-3">
                             <form onSubmit={this.onSubmit}>
+                                {errors.serverError && <InlineError text={errors.serverError} />}
                                 <h3 className="form-signin-header text-center">登录TBlog</h3>
                                 <div className="form-group">
                                     <div className="input-group">
@@ -106,7 +113,7 @@ PropTypes.propTypes={
     history: PropTypes.shape({
         push: PropTypes.func.isRequired
     }).isRequired,
-    login: PropTypes.func.isRequired
+    doLogin: PropTypes.func.isRequired
 }
 
-export default connect(null,{login})(Login)
+export default connect(null,{doLogin})(Login)
