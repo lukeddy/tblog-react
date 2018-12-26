@@ -71,7 +71,7 @@ class PostDetail extends React.Component{
                                         <img src={collect} alt=""/>
                                     </a>
 
-                                    <a href="javascript:;" className="action-link">
+                                    <a href="/" className="action-link">
                                         <img src={share} alt=""/>
                                             <span>分享</span>
                                     </a>

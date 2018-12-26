@@ -18,7 +18,7 @@ class Pagination extends React.Component{
                     <li>
                         <a href="/tblog/?pageSize=30&amp;pageNO=1&amp;tab=all">3</a>
                     </li>
-                    <li className="disabled"><a>»</a></li>
+                    <li className="disabled">»</li>
                     <li>
                         <span>当前第1页,共3页</span>
                     </li>

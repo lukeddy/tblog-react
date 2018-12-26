@@ -1,8 +1,10 @@
 import React from 'react'
 import Advertise from "./Advertise";
 import {Link} from "react-router-dom";
-import Validator from "validator";
 import InlineError from "./common/InlineError";
+import {connect} from 'react-redux';
+import {login} from '../actions/authActions';
+import PropTypes from 'prop-types';
 
 class Login extends React.Component{
     constructor(props){
@@ -33,8 +35,14 @@ class Login extends React.Component{
         console.log(errors);
 
         if (Object.keys(errors).length === 0) {
-            //TODO submit data
+            //submit data
             console.log(this.state)
+            this.props.login(this.state.data).then(resp=>{
+                console.log(resp);
+                //this.props.history.push("/home")
+            }).catch(error=>{
+                console.log(error);
+            });
         }
     }
 
@@ -94,4 +102,11 @@ class Login extends React.Component{
     }
 }
 
-export default Login
+PropTypes.propTypes={
+    history: PropTypes.shape({
+        push: PropTypes.func.isRequired
+    }).isRequired,
+    login: PropTypes.func.isRequired
+}
+
+export default connect(null,{login})(Login)

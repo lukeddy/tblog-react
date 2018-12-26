@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import Index from './components/Index';
 import About from './components/About';
 import Nav from './components/Nav'
@@ -8,6 +8,7 @@ import Login from './components/Login'
 import Register from "./components/Register";
 import PostDetail from "./components/PostDetail";
 import NoMatch from "./components/NoMatch";
+
 
 
 class App extends Component {

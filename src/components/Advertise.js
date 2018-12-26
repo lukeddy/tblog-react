@@ -25,8 +25,8 @@ class Advertise extends React.Component{
                         <span className="col_fade">广告</span>
                     </div>
                     <div className="inner ads">
-                        <a href="javascript:;" target="_blank" className="banner">
-                            <img src={logo}/>
+                        <a href="/" target="_blank" className="banner">
+                            <img src={logo} alt="ads"/>
                         </a>
                     </div>
                 </div>

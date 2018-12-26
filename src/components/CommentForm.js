@@ -4,7 +4,7 @@ class CommentForm extends React.Component{
     render(){
         return(
             <div id="comment-form" className="row comment-form">
-                <form action="/addComment" method="post" className="form-vertical" role="form">
+                <form action="/addComment" method="post" className="form-vertical">
                     <fieldset>
                         <div className="form-group">
                             <label>评论</label>

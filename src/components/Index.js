@@ -20,7 +20,7 @@ class Index extends Component {
                             <a href="/tblog/?tab=good" className="topic-tab">good</a>
                             <a href="/tblog/?tab=nice" className="topic-tab">nice</a>
                             <span className="dropdown">
-                            <a href="#" className="dropdown-toggle topic-tab" data-toggle="dropdown" role="button"
+                            <a href="/" className="dropdown-toggle topic-tab" data-toggle="dropdown" role="button"
                                aria-haspopup="true" aria-expanded="false">更多 <span className="caret"></span></a>
                             <ul className="dropdown-menu">
                                      <li className="topic-tab">
