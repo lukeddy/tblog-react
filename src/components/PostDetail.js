@@ -10,6 +10,15 @@ import {Link} from "react-router-dom";
 
 class PostDetail extends React.Component{
 
+    state={
+        id:null
+    }
+
+    componentDidMount(){
+        const postId=this.props.match.params.id;
+        this.setState({id:postId})
+    }
+
     render(){
         return(
             <div className="container main">
@@ -21,7 +30,7 @@ class PostDetail extends React.Component{
                     </ul>
                     <div className="panel">
                         <div className="header topic-header">
-                            <h1 className="topic-full-title">Java 侵权案进入尾声，谷歌不服判决要向最高法院上诉</h1>
+                            <h1 className="topic-full-title">{this.state.id}-Java 侵权案进入尾声，谷歌不服判决要向最高法院上诉</h1>
                             <div className="changes">
                                 <span>3个月前</span><span>&nbsp;&nbsp;作者：<a
                                 href="/tblog/pub/user/5b7d59bbbf578d05d7046ef6">admin</a></span><span>&nbsp;&nbsp;51次浏览</span>

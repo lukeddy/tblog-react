@@ -23,7 +23,7 @@ class App extends Component {
                     <Route path="/about" component={About}/>
                     <Route path="/login" component={Login}/>
                     <Route path="/register" component={Register}/>
-                    <Route path="/detail" component={PostDetail}/>
+                    <Route path="/post/:id" component={PostDetail}/>
                     <Route component={NoMatch}/>
                 </Switch>
                 <Footer></Footer>
