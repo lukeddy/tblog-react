@@ -1,13 +1,18 @@
 import React from 'react'
 import Advertise from "./Advertise";
 import {Link} from "react-router-dom";
+import Validator from "validator";
+import InlineError from "./common/InlineError";
 
 class Login extends React.Component{
     constructor(props){
         super(props)
         this.state={
-            username:'',
-            password:'',
+            data: {
+                username: "",
+                password: ""
+            },
+            errors: {}
         }
 
         this.onChange=this.onChange.bind(this);
@@ -15,15 +20,34 @@ class Login extends React.Component{
     }
 
     onChange(e){
-      this.setState({[e.target.name]:e.target.value})
+        this.setState({
+            data: { ...this.state.data, [e.target.name]: e.target.value }
+        });
     }
     onSubmit(e){
         e.preventDefault()
-        //TODO submit data
-        console.log(this.state)
+        //验证数据有效性
+        const errors = this.validate(this.state.data);
+        this.setState({ errors });
+
+        console.log(errors);
+
+        if (Object.keys(errors).length === 0) {
+            //TODO submit data
+            console.log(this.state)
+        }
     }
+
+    validate(data){
+        const errors = {};
+        if (!data.username) errors.username = "用户名不能为空";
+        if (!data.password) errors.password = "密码不能为空";
+        return errors;
+    }
+
     render(){
-        const {username,password}=this.state
+        const { data, errors } = this.state;
+
         return (
             <div className="container main">
                 <div className="col-md-9">
@@ -38,15 +62,16 @@ class Login extends React.Component{
                                 <div className="form-group">
                                     <div className="input-group">
                                         <div className="input-group-addon">用户名:</div>
-                                        <input type="text" name="username" value={username} onChange={this.onChange} className="form-control"/>
+                                        <input type="text" name="username" value={data.username} onChange={this.onChange} className="form-control"/>
                                     </div>
+                                    {errors.username && <InlineError text={errors.username} />}
                                 </div>
                                 <div className="form-group">
                                     <div className="input-group">
                                         <div className="input-group-addon">密&nbsp;&nbsp;&nbsp;&nbsp;码:</div>
-                                        <input name="password" type="password" value={password} onChange={this.onChange} className="form-control"/>
+                                        <input name="password" type="password" value={data.password} onChange={this.onChange} className="form-control"/>
                                     </div>
-
+                                    {errors.password && <InlineError text={errors.password} />}
                                 </div>
                                 <div className="btn-group btn-group-justified" role="group" aria-label="...">
                                     <div className="btn-group" role="group">
