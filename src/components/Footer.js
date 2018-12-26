@@ -2,11 +2,18 @@ import React,{Component} from 'react'
 import './Footer.css'
 
 class Footer extends Component{
+    componentDidMount(){
+        console.log("env:"+process.env.REACT_APP_ENV)
+        console.log("base URL:"+process.env.REACT_APP_BASE_URL)
+        console.log("api URL:"+process.env.REACT_APP_API_URL)
+    }
     render(){
         return (
             <div id="footer">
                 <div id="footer_main">
                     <div className="links">
+                        <strong className="env">环境：{process.env.REACT_APP_ENV}</strong>
+                        |
                         <a className="dark" href="/tblog/rss">RSS</a>
                         |
                         <a href="/tblog/swagger-ui.html" target="_blank">API</a>
