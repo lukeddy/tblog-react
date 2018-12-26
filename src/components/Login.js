@@ -3,7 +3,27 @@ import Advertise from "./Advertise";
 import {Link} from "react-router-dom";
 
 class Login extends React.Component{
+    constructor(props){
+        super(props)
+        this.state={
+            username:'',
+            password:'',
+        }
+
+        this.onChange=this.onChange.bind(this);
+        this.onSubmit=this.onSubmit.bind(this);
+    }
+
+    onChange(e){
+      this.setState({[e.target.name]:e.target.value})
+    }
+    onSubmit(e){
+        e.preventDefault()
+        //TODO submit data
+        console.log(this.state)
+    }
     render(){
+        const {username,password}=this.state
         return (
             <div className="container main">
                 <div className="col-md-9">
@@ -12,20 +32,19 @@ class Login extends React.Component{
                         <li className="active">登录</li>
                     </ul>
                     <div className="row wrapper">
-                        <div className="col-sm-3">&nbsp;</div>
-                        <div className="col-sm-6">
-                            <form action="/tblog/login" method="post">
+                        <div className="col-sm-6 col-sm-offset-3">
+                            <form onSubmit={this.onSubmit}>
                                 <h3 className="form-signin-header text-center">登录TBlog</h3>
                                 <div className="form-group">
                                     <div className="input-group">
                                         <div className="input-group-addon">用户名:</div>
-                                        <input type="text" name="username" value="" className="form-control"/>
+                                        <input type="text" name="username" value={username} onChange={this.onChange} className="form-control"/>
                                     </div>
                                 </div>
                                 <div className="form-group">
                                     <div className="input-group">
                                         <div className="input-group-addon">密&nbsp;&nbsp;&nbsp;&nbsp;码:</div>
-                                        <input name="password" type="password" value="" className="form-control"/>
+                                        <input name="password" type="password" value={password} onChange={this.onChange} className="form-control"/>
                                     </div>
 
                                 </div>
@@ -40,7 +59,6 @@ class Login extends React.Component{
                                 <p>没有账户？点击<a href="/register">注册</a></p>
                             </form>
                         </div>
-                        <div className="col-sm-3">&nbsp;</div>
                     </div>
                 </div>
                 <div className="col-md-3">

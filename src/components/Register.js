@@ -4,6 +4,28 @@ import {Link} from "react-router-dom";
 
 class Register extends React.Component{
 
+    constructor(props){
+        super(props)
+        this.state={
+            username:'',
+            password:'',
+            email:'',
+        };
+
+        this.onChange=this.onChange.bind(this);
+        this.onSubmit=this.onSubmit.bind(this);
+    }
+
+    onChange(e){
+        this.setState({[e.target.name]:e.target.value})
+    }
+
+    onSubmit(e){
+        e.preventDefault()
+        //TODO submit data
+        console.log(this.state)
+    }
+
     render(){
         return (
             <div className="container main">
@@ -13,30 +35,26 @@ class Register extends React.Component{
                         <li className="active">注册</li>
                     </ul>
                     <div className="row wrapper">
-                        <div className="col-sm-3">&nbsp;</div>
-                        <div className="col-sm-6">
-                            <form action="/register" method="post">
+                        <div className="col-sm-6 col-sm-offset-3">
+                            <form onSubmit={this.onSubmit}>
                                 <h3 className="form-signin-header text-center">用户注册</h3>
                                 <div className="form-group">
                                     <div className="input-group">
                                         <div className="input-group-addon">用户名:</div>
-                                        <input value="" name="username" id="username" className="form-control"
-                                               placeholder="请输入用户名"/>
+                                        <input value={this.state.username} onChange={this.onChange} name="username" className="form-control" placeholder="请输入用户名"/>
                                     </div>
                                 </div>
                                 <div className="form-group">
                                     <div className="input-group">
                                         <div className="input-group-addon">密&nbsp;&nbsp;&nbsp;&nbsp;码:</div>
-                                        <input value="" type="password" name="password" className="form-control"
-                                               id="password" placeholder="请输入密码"/>
+                                        <input value={this.state.password} onChange={this.onChange} type="password" name="password" className="form-control" placeholder="请输入密码"/>
                                     </div>
 
                                 </div>
                                 <div className="form-group">
                                     <div className="input-group">
                                         <div className="input-group-addon">邮&nbsp;&nbsp;&nbsp;&nbsp;件:</div>
-                                        <input value="" type="email" name="email" className="form-control" id="email"
-                                               placeholder="电子邮件"/>
+                                        <input value={this.state.email} onChange={this.onChange} type="email" name="email" className="form-control" placeholder="电子邮件"/>
                                     </div>
 
                                 </div>
@@ -51,7 +69,6 @@ class Register extends React.Component{
                                  <p>已经有账户？点击<a href="/tblog/login">登陆</a></p>
                             </form>
                         </div>
-                        <div className="com-sm-3">&nbsp;</div>
                     </div>
                 </div>
                 <div className="col-md-3">
