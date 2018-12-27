@@ -10,6 +10,7 @@ import PostDetail from "./components/PostDetail";
 import NoMatch from "./components/NoMatch";
 import Category from "./components/admin/Category";
 import CategoryAdd from "./components/admin/CategoryAdd";
+import CategoryEdit from "./components/admin/CategoryEdit";
 
 
 
@@ -29,6 +30,7 @@ class App extends Component {
                     <Route path="/post/:id" component={PostDetail}/>
                     <Route path="/category" component={Category}/>
                     <Route path="/categoryadd" component={CategoryAdd}/>
+                    <Route path="/categoryedit/:id" component={CategoryEdit}/>
                     <Route component={NoMatch}/>
                 </Switch>
                 <Footer></Footer>

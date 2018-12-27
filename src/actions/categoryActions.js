@@ -1,12 +1,12 @@
 import axios from "axios";
-import {CATEGORY_FETCHED} from "./types";
+import {CATEGORY_LIST_FETCHED} from "./types";
 
 export function fetchCategoryList(data) {
     return dispatch => {
         return new Promise((resolve, reject) => {
             axios.post("/category/list", data).then(response => {
                 if(response.data.status){
-                    dispatch({type:CATEGORY_FETCHED,pager:response.data.data});
+                    dispatch({type:CATEGORY_LIST_FETCHED,pager:response.data.data});
                 }
                 resolve(response)
             }).catch(error => {
@@ -16,10 +16,36 @@ export function fetchCategoryList(data) {
     }
 }
 
+
 export function createCategory(data) {
     return dispatch => {
         return new Promise((resolve, reject) => {
             axios.post("/category/add", data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        });
+    }
+}
+
+export function getCategory(catId) {
+    return dispatch => {
+        return new Promise((resolve, reject) => {
+            axios.get("/category/"+catId,null).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        });
+    }
+}
+
+
+export function updateCategory(catId,data) {
+    return dispatch => {
+        return new Promise((resolve, reject) => {
+            axios.put("/category/"+catId, data).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

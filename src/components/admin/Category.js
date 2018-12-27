@@ -27,7 +27,6 @@ class Category extends React.Component{
         this.fetchData();
     }
     fetchData(){
-        console.log("fetch data page:"+this.state.currentPage);
         this.setState({loading:true});
         this.props.fetchCategoryList({pageNO:this.state.currentPage}).then((response)=>{
             this.setState({loading:false});
@@ -44,10 +43,10 @@ class Category extends React.Component{
     }
 
     goToPage(pageNo){
-        console.log(pageNo);
+        //console.log(pageNo);
         //由于setState方法是异步执行，所以分页数据获取方法需要作为第二个参数
         this.setState({currentPage:pageNo},this.fetchData);
-        console.log(this.state);
+        //console.log(this.state);
     }
 
     render(){
@@ -62,7 +61,7 @@ class Category extends React.Component{
                     <td>{cat.catDir}</td>
                     <td>{cat.createAtFormatted}</td>
                     <td>{cat.updateAtFormatted}</td>
-                    <td><Link to={'/edit/'+cat.id}>修改</Link></td>
+                    <td><Link to={'/categoryedit/'+cat.id}>修改</Link></td>
                 </tr>
             );
         }else{
