@@ -37,6 +37,7 @@ class Nav extends Component{
                         <li><Link to='/'>首页</Link></li>
                         <li><Link to="/about">关于</Link></li>
                         <li><Link to="/category">栏目管理</Link></li>
+                        <li><Link to="/post">帖子管理</Link></li>
                         {!isAuthenticated && <li><Link to="/register">注册</Link></li>}
                         {!isAuthenticated && <li><Link to="/login">登陆</Link></li>}
                         {isAuthenticated && <li><Link to="/logout" onClick={this.logout.bind(this)}>登出</Link></li>}

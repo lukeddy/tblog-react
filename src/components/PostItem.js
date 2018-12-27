@@ -30,7 +30,7 @@ class PostItem extends React.Component{
                                 </ul>
                             </div>
                             <div className="title-row">
-                                <Link to="/post/123456789" className="title">
+                                <Link to="/detail/123456789" className="title">
                                     Java 侵权案进入尾声，谷歌不服判决要向最高法院上诉
                                 </Link>
                             </div>

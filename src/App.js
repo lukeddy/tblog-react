@@ -11,6 +11,8 @@ import NoMatch from "./components/NoMatch";
 import Category from "./components/admin/Category";
 import CategoryAdd from "./components/admin/CategoryAdd";
 import CategoryEdit from "./components/admin/CategoryEdit";
+import Post from "./components/admin/Post";
+import PostAdd from "./components/admin/PostAdd";
 
 
 
@@ -27,10 +29,12 @@ class App extends Component {
                     <Route path="/about" component={About}/>
                     <Route path="/login" component={Login}/>
                     <Route path="/register" component={Register}/>
-                    <Route path="/post/:id" component={PostDetail}/>
+                    <Route path="/detail/:id" component={PostDetail}/>
                     <Route path="/category" component={Category}/>
                     <Route path="/categoryadd" component={CategoryAdd}/>
                     <Route path="/categoryedit/:id" component={CategoryEdit}/>
+                    <Route path="/post" component={Post}/>
+                    <Route path="/postadd" component={PostAdd}/>
                     <Route component={NoMatch}/>
                 </Switch>
                 <Footer></Footer>
