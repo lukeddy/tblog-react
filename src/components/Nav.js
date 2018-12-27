@@ -13,9 +13,7 @@ class Nav extends Component{
     }
 
     render(){
-        console.log(this.props);
         const {isAuthenticated}=this.props.auth;
-        console.log(isAuthenticated);
 
         return (
             <div className="navbar navbar-inverse navbar-fixed-top">

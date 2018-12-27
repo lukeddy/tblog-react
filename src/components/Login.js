@@ -3,8 +3,9 @@ import Advertise from "./Advertise";
 import {Link} from "react-router-dom";
 import InlineError from "./common/InlineError";
 import {connect} from 'react-redux';
-import {doLogin} from '../actions/authActions';
+import {login} from '../actions/authActions';
 import PropTypes from 'prop-types';
+import Alert from './common/Alert';
 
 class Login extends React.Component{
     constructor(props){
@@ -14,7 +15,9 @@ class Login extends React.Component{
                 username: "",
                 password: ""
             },
-            errors: {}
+            loading:false,
+            errors: {},
+            alertData:{},
         }
 
         this.onChange=this.onChange.bind(this);
@@ -32,22 +35,21 @@ class Login extends React.Component{
         const errors = this.validate(this.state.data);
         this.setState({ errors });
 
-        console.log(errors);
-
         if (Object.keys(errors).length === 0) {
-            this.props.doLogin(this.state.data).then((response)=>{
+            this.setState({loading:true});
+            this.props.login(this.state.data).then((response)=>{
+                this.setState({loading:false});
+                this.setState({alertData:response.data});
                 if(response.data.status){
                     this.props.history.push("/home");
-                }else{
-                    const errors = {};
-                    errors.serverError=response.data.msg;
-                    this.setState({errors});
                 }
             }).catch(error=>{
                 console.log(error);
-                // const errors = {};
-                // errors.serverError=error.toString();
-                // this.setState({errors});
+                const data={
+                    status:false,
+                    msg:error.toString()
+                }
+                this.setState({alertData:data});
             });
         }
     }
@@ -60,7 +62,7 @@ class Login extends React.Component{
     }
 
     render(){
-        const { data, errors } = this.state;
+        const { data, errors,loading,alertData } = this.state;
 
         return (
             <div className="container main">
@@ -71,8 +73,8 @@ class Login extends React.Component{
                     </ul>
                     <div className="row wrapper">
                         <div className="col-sm-6 col-sm-offset-3">
+                            <Alert alertData={alertData}/>
                             <form onSubmit={this.onSubmit}>
-                                {errors.serverError && <InlineError text={errors.serverError} />}
                                 <h3 className="form-signin-header text-center">登录TBlog</h3>
                                 <div className="form-group">
                                     <div className="input-group">
@@ -90,13 +92,13 @@ class Login extends React.Component{
                                 </div>
                                 <div className="btn-group btn-group-justified" role="group" aria-label="...">
                                     <div className="btn-group" role="group">
-                                        <button className="btn btn-success" type="submit">登录</button>
+                                        <button className="btn btn-success" type="submit" disabled={loading}>登录</button>
                                     </div>
                                     <div className="btn-group" role="group">
                                         <button className="btn btn-default" type="reset">重置</button>
                                     </div>
                                 </div>
-                                <p>没有账户？点击<a href="/register">注册</a></p>
+                                <p>没有账户？点击<Link to="/register">注册</Link></p>
                             </form>
                         </div>
                     </div>
@@ -113,7 +115,7 @@ PropTypes.propTypes={
     history: PropTypes.shape({
         push: PropTypes.func.isRequired
     }).isRequired,
-    doLogin: PropTypes.func.isRequired
+    login: PropTypes.func.isRequired
 }
 
-export default connect(null,{doLogin})(Login)
+export default connect(null,{login})(Login)

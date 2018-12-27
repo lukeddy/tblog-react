@@ -3,6 +3,9 @@ import Advertise from "./Advertise";
 import {Link} from "react-router-dom";
 import Validator from 'validator';
 import InlineError from './common/InlineError';
+import Alert from './common/Alert';
+import {connect} from 'react-redux';
+import {register} from '../actions/authActions';
 
 class Register extends React.Component{
 
@@ -14,7 +17,9 @@ class Register extends React.Component{
                 password:'',
                 email:'',
             },
-            errors:{}
+            loading:false,
+            errors:{},
+            alertData:{},
         };
 
         this.onChange=this.onChange.bind(this);
@@ -33,11 +38,19 @@ class Register extends React.Component{
         const errors = this.validate(this.state.data);
         this.setState({ errors });
 
-        console.log(errors);
-
         if (Object.keys(errors).length === 0) {
-            //TODO submit data
-            console.log(this.state)
+            this.setState({loading:true});
+            this.props.register(this.state.data).then((response)=>{
+                this.setState({loading:false});
+                this.setState({alertData:response.data});
+            }).catch(error=>{
+                console.log(error);
+                const data={
+                    status:false,
+                    msg:error.toString()
+                }
+                this.setState({alertData:data});
+            });
         }
     }
 
@@ -45,14 +58,15 @@ class Register extends React.Component{
         const errors = {};
         if(!Validator.isEmail(data.email)) errors.email="邮件地址无效"
         if(!data.username) errors.username = "用户名不能为空";
-        if(data.username&&(!Validator.isAlphanumeric(data.username)||!Validator.isLowercase(data.username)||!Validator.isLength(data.username,{min:6,max:12}))) errors.username="用户名只能是6到12个小写字母和数字组合"
+        if(data.username&&(!Validator.isAlphanumeric(data.username)||!Validator.isLowercase(data.username)||!Validator.isLength(data.username,{min:5,max:12}))) errors.username="用户名只能是5到12个小写字母和数字组合"
         if(!data.password) errors.password = "密码不能为空";
+        if(data.password&&(!Validator.isLength(data.password,{min:3,max:16}))) errors.password="密码至少3位最多16位";
         return errors;
     }
 
     render(){
 
-        const {data,errors}=this.state
+        const {data,errors,loading,alertData}=this.state
 
         return (
             <div className="container main">
@@ -63,6 +77,7 @@ class Register extends React.Component{
                     </ul>
                     <div className="row wrapper">
                         <div className="col-sm-6 col-sm-offset-3">
+                            <Alert alertData={alertData}/>
                             <form onSubmit={this.onSubmit}>
                                 <h3 className="form-signin-header text-center">用户注册</h3>
                                 <div className="form-group">
@@ -88,13 +103,13 @@ class Register extends React.Component{
                                 </div>
                                 <div className="btn-group btn-group-justified" role="group" aria-label="...">
                                     <div className="btn-group" role="group">
-                                        <button className="btn btn-success" type="submit">注册</button>
+                                        <button className="btn btn-success" type="submit" disabled={loading}>注册</button>
                                     </div>
                                     <div className="btn-group" role="group">
                                         <button className="btn btn-default" type="reset">重置</button>
                                     </div>
                                 </div>
-                                 <p>已经有账户？点击<a href="/tblog/login">登陆</a></p>
+                                 <p>已经有账户？点击<Link to="/login">登陆</Link></p>
                             </form>
                         </div>
                     </div>
@@ -107,4 +122,4 @@ class Register extends React.Component{
     }
 }
 
-export default Register
+export default connect(null,{register})(Register)
