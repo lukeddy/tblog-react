@@ -1,6 +1,5 @@
 import React from "react";
 import Advertise from "./Advertise";
-import './PostDetail.css'
 import like from '../assets/ico/like.svg'
 import comment from '../assets/ico/comment.svg'
 import collect from '../assets/ico/collect.svg'
@@ -26,7 +25,7 @@ class PostDetail extends React.Component{
                     <ul className="breadcrumb">
                         <li><Link to="/">主页</Link><span
                             className="divider"></span></li>
-                        <li><a href="/tblog/?tab=java">Java</a><span className="divider"></span></li>
+                        <li>Java<span className="divider"></span></li>
                     </ul>
                     <div className="panel">
                         <div className="header topic-header">

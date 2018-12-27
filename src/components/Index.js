@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import './Index.css';
 import Advertise from "./Advertise";
 import Pagination from "./common/Pagination";
 import PostList from "./PostList";

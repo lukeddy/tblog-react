@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import './Nav.css'
 import {Link} from "react-router-dom";
 import {connect} from 'react-redux';
 import {logout} from '../actions/authActions';
