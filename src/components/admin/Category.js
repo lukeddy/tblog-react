@@ -81,7 +81,7 @@ class Category extends React.Component{
                     </ul>
                     <div className="panel">
                         <div className="panel-body">
-                            <h4>栏目列表 <Link to="/create">[新增]</Link></h4>
+                            <h4>栏目列表 <Link to="/categoryadd">[新增]</Link></h4>
                             <Alert alertData={alertData}/>
                             <table className="table">
                                 <thead>

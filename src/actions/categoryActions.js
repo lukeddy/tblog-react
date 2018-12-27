@@ -15,3 +15,15 @@ export function fetchCategoryList(data) {
         });
     }
 }
+
+export function createCategory(data) {
+    return dispatch => {
+        return new Promise((resolve, reject) => {
+            axios.post("/category/add", data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        });
+    }
+}

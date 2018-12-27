@@ -9,6 +9,7 @@ import Register from "./components/Register";
 import PostDetail from "./components/PostDetail";
 import NoMatch from "./components/NoMatch";
 import Category from "./components/admin/Category";
+import CategoryAdd from "./components/admin/CategoryAdd";
 
 
 
@@ -27,6 +28,7 @@ class App extends Component {
                     <Route path="/register" component={Register}/>
                     <Route path="/post/:id" component={PostDetail}/>
                     <Route path="/category" component={Category}/>
+                    <Route path="/categoryadd" component={CategoryAdd}/>
                     <Route component={NoMatch}/>
                 </Switch>
                 <Footer></Footer>
