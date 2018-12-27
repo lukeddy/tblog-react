@@ -4,6 +4,15 @@ import Pagination from "./common/Pagination";
 import PostList from "./PostList";
 
 class Index extends Component {
+    constructor(props){
+        super(props)
+
+        //一定要写这个binding，不然在调用分页接口时会报goToPage is not a function
+        this.goToPage=this.goToPage.bind(this);
+    }
+    goToPage(pageNo){
+        console.log(pageNo);
+    }
     render() {
         return (
             <div className="container main">
@@ -38,7 +47,7 @@ class Index extends Component {
                         </div>
                         <div className="inner no-padding">
                             <PostList></PostList>
-                            <Pagination></Pagination>
+                            <Pagination totalPages={10} currentPage={1} jumpPage={this.goToPage}></Pagination>
                         </div>
                     </div>
                 </div>

@@ -8,6 +8,7 @@ import Login from './components/Login'
 import Register from "./components/Register";
 import PostDetail from "./components/PostDetail";
 import NoMatch from "./components/NoMatch";
+import Category from "./components/admin/Category";
 
 
 
@@ -25,6 +26,7 @@ class App extends Component {
                     <Route path="/login" component={Login}/>
                     <Route path="/register" component={Register}/>
                     <Route path="/post/:id" component={PostDetail}/>
+                    <Route path="/category" component={Category}/>
                     <Route component={NoMatch}/>
                 </Switch>
                 <Footer></Footer>

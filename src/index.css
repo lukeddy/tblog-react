@@ -66,7 +66,9 @@ code {
 .panel .inner.no-padding {
   padding: 0
 }
-
+.panel a {
+  color: #08c;
+}
 .panel .inner a {
   color: #778087
 }
@@ -557,3 +559,9 @@ code {
   vertical-align: bottom
 }
 /*页脚结束*/
+.pagination{
+  margin-left:20px;
+}
+.pagination .page-link{
+  cursor: pointer;
+}

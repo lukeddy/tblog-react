@@ -1,31 +1,39 @@
 import React from "react";
+import PropTypes from 'prop-types';
 
 class Pagination extends React.Component{
 
     render(){
+        const {totalPages,currentPage,jumpPage}=this.props
+
         return (
-            <nav aria-label="Page navigation">
+            <nav>
                 <ul className="pagination">
                     <li className="disabled">
                         <span aria-hidden="true">«</span>
                     </li>
-                    <li className="active">
-                        <a href="/tblog/?pageSize=30&amp;pageNO=1&amp;tab=all">1</a>
-                    </li>
+                    {[...Array(totalPages)].map((e, i) => {
+                        const pageNo=i+1
+                        return(
+                            <li key={pageNo} className={currentPage===pageNo?'active':''}>
+                                <span className="page-link" onClick={jumpPage.bind(this,pageNo)}>{pageNo}</span>
+                            </li>
+                        )
+                    })}
+                    <li className="disabled"><span aria-hidden="true">»</span></li>
                     <li>
-                        <a href="/tblog/?pageSize=30&amp;pageNO=1&amp;tab=all">2</a>
-                    </li>
-                    <li>
-                        <a href="/tblog/?pageSize=30&amp;pageNO=1&amp;tab=all">3</a>
-                    </li>
-                    <li className="disabled">»</li>
-                    <li>
-                        <span>当前第1页,共3页</span>
+                        <span>当前第{currentPage}页,共{totalPages}页</span>
                     </li>
                 </ul>
             </nav>
         );
     }
+}
+
+Pagination.propTypes={
+  totalPages:PropTypes.number.isRequired,
+  currentPage:PropTypes.number.isRequired,
+  jumpPage:PropTypes.func.isRequired
 }
 
 export default Pagination

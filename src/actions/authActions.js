@@ -9,9 +9,10 @@ export function login(credentials) {
         return new Promise((resolve, reject) => {
             axios.post("/login", credentials).then(response => {
                 if(response.data.status){
-                    localStorage.tblogToken =response.data;
-                    setAuthorizationHeader(response.data);
-                    dispatch({type: USER_LOGGED_IN,token:response.data});
+                    console.log(response.data.data);
+                    localStorage.tblogToken =response.data.data;
+                    setAuthorizationHeader(response.data.data);
+                    dispatch({type: USER_LOGGED_IN,token:response.data.data});
                 }
                 resolve(response)
             }).catch(error => {
