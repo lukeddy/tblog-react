@@ -78,7 +78,7 @@ class CategoryAdd extends React.Component{
                     </ul>
                     <div className="panel">
                         <div className="panel-body">
-                            <h3>新建栏目</h3>
+                            <h4>新建栏目</h4>
                             <Alert alertData={alertData}></Alert>
                             <form onSubmit={this.onSubmit}>
                                 <div className="form-group">
