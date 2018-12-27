@@ -7,11 +7,21 @@ class Index extends Component {
     constructor(props){
         super(props)
 
+        this.state={
+            currentPage:1,
+            totalPages:16,
+        }
+
         //一定要写这个binding，不然在调用分页接口时会报goToPage is not a function
+        this.loadData=this.loadData.bind(this);
         this.goToPage=this.goToPage.bind(this);
     }
+    loadData(pageNo){
+        console.log("loading data: "+pageNo);
+    }
     goToPage(pageNo){
-        console.log(pageNo);
+        console.log("go to page:"+pageNo);
+        this.setState({currentPage:pageNo},this.loadData(pageNo))
     }
     render() {
         return (
@@ -47,7 +57,7 @@ class Index extends Component {
                         </div>
                         <div className="inner no-padding">
                             <PostList></PostList>
-                            <Pagination totalPages={10} currentPage={1} jumpPage={this.goToPage}></Pagination>
+                            <Pagination totalPages={this.state.totalPages} currentPage={this.state.currentPage} jumpPage={this.goToPage}></Pagination>
                         </div>
                     </div>
                 </div>
