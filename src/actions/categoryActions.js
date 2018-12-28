@@ -16,6 +16,18 @@ export function fetchCategoryList(data) {
     }
 }
 
+export function fetchAllCategory() {
+    return dispatch => {
+        return new Promise((resolve, reject) => {
+            axios.get("/category/all").then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        });
+    }
+}
+
 
 export function createCategory(data) {
     return dispatch => {
