@@ -11,3 +11,15 @@ export function fetchPostList(data) {
         });
     }
 }
+
+export function createPost(data) {
+    return dispatch => {
+        return new Promise((resolve, reject) => {
+            axios.post("/post", data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        });
+    }
+}

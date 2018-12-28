@@ -1,10 +1,14 @@
 import React from 'react';
 import Advertise from "../Advertise";
+import Alert from '../common/Alert';
+import InlineError from "../common/InlineError";
 import {Link} from "react-router-dom";
 import Dropzone from 'react-dropzone';
 import {connect} from 'react-redux';
 import {fetchAllCategory} from '../../actions/categoryActions';
 import {uploadFile} from '../../actions/uploadActions';
+import {getUserInfo} from '../../actions/userActions';
+import {createPost} from '../../actions/postActions';
 
 class PostAdd extends React.Component{
 
@@ -12,14 +16,18 @@ class PostAdd extends React.Component{
         super(props);
         this.state={
             data:{
+                authorId:null,
                 catId:"",
-                title:"",
-                desc:"",
-                tags:"",
+                title:null,
+                desc:null,
+                tags:null,
                 thumbURL:null,
                 thumbBG:null,
-                contentMD:"",
-                contentHtml:"",
+                contentMD:null,
+                contentHtml:null,
+                contentIsHTML:false,
+                top:false,
+                good:false,
             },
             allCategory:[],
             loading:false,
@@ -34,6 +42,17 @@ class PostAdd extends React.Component{
         this.props.fetchAllCategory().then((response)=>{
             if(response.data.status){
                 this.setState({allCategory:response.data.data},console.log('all cat:',this.state.allCategory));
+            }
+        }).catch(error=>{
+            console.log(error);
+            this.setState({alertData:{status:false,msg:error.toString()}});
+        });
+
+        this.props.getUserInfo().then((response)=>{
+            if(response.data.status){
+                console.log('login user:',response.data.data);
+                this.setState({data: { ...this.state.data, authorId: response.data.data.uid }});
+
             }
         }).catch(error=>{
             console.log(error);
@@ -54,7 +73,19 @@ class PostAdd extends React.Component{
 
         console.log(this.state.data)
         if (Object.keys(errors).length === 0) {
-            //TODO api call
+            this.setState({loading:true});
+            this.props.createPost(this.state.data).then((response)=>{
+                this.setState({loading:false});
+                this.setState({alertData:response.data});
+            }).catch(error=>{
+                console.log(error);
+                const data={
+                    status:false,
+                    msg:error.toString()
+                }
+                this.setState({alertData:data});
+                this.setState({loading:false});
+            });
         }
     }
 
@@ -63,7 +94,6 @@ class PostAdd extends React.Component{
         if (!data.catId) errors.catId = "请选择栏目";
         if (!data.title) errors.title = "标题不能为空";
         if (!data.contentMD) errors.contentMD = "内容MD不能为空";
-        if (!data.contentHTML) errors.contentHTML = "内容HTML不能为空";
         return errors;
     }
 
@@ -91,7 +121,7 @@ class PostAdd extends React.Component{
     }
 
     render(){
-        const {data,allCategory}=this.state
+        const {data,allCategory,alertData,errors,loading}=this.state
 
         return(
             <div className="container main">
@@ -103,6 +133,7 @@ class PostAdd extends React.Component{
                     </ul>
                     <div className="panel">
                         <div className="panel-body">
+                            <Alert alertData={alertData}/>
                             <h4>新建帖子</h4>
                             <form onSubmit={this.onSubmit}>
                                     <div className="form-group">
@@ -117,18 +148,21 @@ class PostAdd extends React.Component{
                                                 })}
                                             </select>
                                         </div>
+                                        {errors.catId && <InlineError text={errors.catId} />}
                                     </div>
                                     <div className="form-group">
                                         <div className="input-group">
                                             <div className="input-group-addon">标题*:</div>
                                             <input type="text" name="title" className="form-control"  placeholder="输入帖子标题" value={data.title} onChange={this.onChange}/>
                                         </div>
+                                        {errors.title && <InlineError text={errors.title} />}
                                     </div>
                                     <div className="form-group">
                                         <div className="input-group">
                                             <div className="input-group-addon">摘要:</div>
                                             <textarea name="desc" className="form-control" rows="3" placeholder="输入摘要" value={data.desc} onChange={this.onChange}></textarea>
                                         </div>
+                                        {errors.desc && <InlineError text={errors.desc} />}
                                     </div>
                                     <div className="form-group">
                                         <div className="input-group">
@@ -136,25 +170,27 @@ class PostAdd extends React.Component{
                                             <input type="text" name="tags" className="form-control" placeholder="输入标签" value={data.tags} onChange={this.onChange}/>
                                         </div>
                                         <span className="label-info">注意：标签使用英文逗号分隔</span>
+                                        {errors.tags && <InlineError text={errors.tags} />}
                                     </div>
                                     <div className="form-group">
                                         <label>正文</label>
-                                        <textarea className="form-control" placeholder="不要吝啬您的评论，您的一言将帮助千万网友" rows={6} cols={3}></textarea>
+                                        <textarea className="form-control" name="contentMD" value={data.contentMD} onChange={this.onChange} placeholder="不要吝啬您的评论，您的一言将帮助千万网友" rows={6} cols={3}></textarea>
+                                        {errors.contentMD && <InlineError text={errors.contentMD} />}
                                     </div>
                                     <div className="checkbox">
                                         <label>
-                                            <input type="checkbox" name="contentIsHTML" value="true"/> 是否网页？
+                                            <input type="checkbox" name="contentIsHTML" value="true" onChange={this.onChange}/> 是否网页？
                                         </label>
                                         <label>
-                                            <input type="checkbox" name="top" value="true"/> 置顶帖？
+                                            <input type="checkbox" name="top" value="true" onChange={this.onChange}/> 置顶帖？
                                         </label>
                                         <label>
-                                            <input type="checkbox" name="good" value="true"/> 精华帖？
+                                            <input type="checkbox" name="good" value="true" onChange={this.onChange}/> 精华帖？
                                         </label>
                                     </div>
 
                                     <div className="form-group text-center">
-                                        <button className="btn btn-success" type="submit">新建</button>
+                                        <button className="btn btn-success" type="submit" disabled={loading}>新建</button>
                                         <button className="btn btn-default" type="reset">清空</button>
                                     </div>
                             </form>
@@ -170,10 +206,7 @@ class PostAdd extends React.Component{
                                             multiple={false}
                                             onDrop={this.onDrop}
                                             style={{width:"100%",height:"120px",border:"2px dashed #0087F7",textAlign:"center",background:"#fff",backgroundSize:'cover',backgroundPosition:"center",backgroundImage:'url('+data.thumbBG+')',"paddingTop":'90px',"cursor":"pointer","boxSizing":"content-box"}} >
-                                    <div className="dz-message needsclick">
-                                        点击或者拖拽上传<br/>
-                                        <span className="note needsclick">(<strong>文章缩略图</strong>)</span>
-                                    </div>
+                                    <p>点击或者拖拽上传<br/>(<strong>文章缩略图</strong>)</p>
                                 </Dropzone>
                             </div>
                         </div>
@@ -185,4 +218,4 @@ class PostAdd extends React.Component{
     }
 }
 
-export default connect(null,{fetchAllCategory,uploadFile})(PostAdd)
+export default connect(null,{fetchAllCategory,uploadFile,getUserInfo,createPost})(PostAdd)
