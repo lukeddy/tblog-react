@@ -18,12 +18,12 @@ class PostAdd extends React.Component{
             data:{
                 authorId:null,
                 catId:"",
-                title:null,
-                desc:null,
-                tags:null,
+                title:"",
+                desc:"",
+                tags:"",
                 thumbURL:null,
                 thumbBG:null,
-                contentMD:null,
+                contentMD:"",
                 contentHtml:null,
                 contentIsHTML:false,
                 top:false,
@@ -45,7 +45,7 @@ class PostAdd extends React.Component{
             }
         }).catch(error=>{
             console.log(error);
-            this.setState({alertData:{status:false,msg:error.toString()}});
+            this.setState({alertData:{status:false,msg:"获取栏目信息失败"}});
         });
 
         this.props.getUserInfo().then((response)=>{
@@ -56,7 +56,7 @@ class PostAdd extends React.Component{
             }
         }).catch(error=>{
             console.log(error);
-            this.setState({alertData:{status:false,msg:error.toString()}});
+            this.setState({alertData:{status:false,msg:"获取用户信息失败"}});
         });
     }
 
@@ -79,10 +79,7 @@ class PostAdd extends React.Component{
                 this.setState({alertData:response.data});
             }).catch(error=>{
                 console.log(error);
-                const data={
-                    status:false,
-                    msg:error.toString()
-                }
+                const data={status:false,msg:"创建帖子失败"}
                 this.setState({alertData:data});
                 this.setState({loading:false});
             });

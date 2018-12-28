@@ -34,7 +34,7 @@ class Post extends React.Component{
         }).catch(error=>{
             console.log(error);
             this.setState({loading:false});
-            this.setState({alertData:{status:false,msg:error.toString()}});
+            this.setState({alertData:{status:false,msg:"获取帖子数据失败"}});
         });
     }
     goToPage(pageNo){

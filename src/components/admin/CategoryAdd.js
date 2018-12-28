@@ -43,10 +43,7 @@ class CategoryAdd extends React.Component{
                 this.setState({alertData:response.data});
             }).catch(error=>{
                 console.log(error);
-                const data={
-                    status:false,
-                    msg:error.toString()
-                }
+                const data={status:false,msg:"创建栏目失败"}
                 this.setState({alertData:data});
                 this.setState({loading:false});
             });

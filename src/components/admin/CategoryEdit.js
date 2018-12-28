@@ -39,7 +39,7 @@ class CategoryEdit extends React.Component{
             }
         }).catch(error=>{
             console.log(error);
-            this.setState({alertData:{status:false,msg:error.toString()}});
+            this.setState({alertData:{status:false,msg:"获取栏目信息失败"}});
         });
     }
 

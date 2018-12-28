@@ -33,10 +33,7 @@ class Category extends React.Component{
             //this.setState({alertData:response.data});
         }).catch(error=>{
             console.log(error);
-            const data={
-                status:false,
-                msg:error.toString()
-            }
+            const data={status:false,msg:"获取栏目数据失败"}
             this.setState({loading:false});
             this.setState({alertData:data});
         });
