@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import Index from './components/Index';
 import About from './components/About';
@@ -13,7 +13,7 @@ import CategoryAdd from "./components/admin/CategoryAdd";
 import CategoryEdit from "./components/admin/CategoryEdit";
 import Post from "./components/admin/Post";
 import PostAdd from "./components/admin/PostAdd";
-
+import PostEdit from "./components/admin/PostEdit";
 
 
 class App extends Component {
@@ -35,6 +35,7 @@ class App extends Component {
                     <Route path="/categoryedit/:id" component={CategoryEdit}/>
                     <Route path="/post" component={Post}/>
                     <Route path="/postadd" component={PostAdd}/>
+                    <Route path="/postedit/:id" component={PostEdit}/>
                     <Route component={NoMatch}/>
                 </Switch>
                 <Footer></Footer>

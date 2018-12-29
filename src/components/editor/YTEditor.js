@@ -6,7 +6,6 @@ import 'prismjs/themes/prism-okaidia.css';
 // import 'prismjs/themes/prism-dark.css';
 import loadLanguages from 'prismjs/components/index';
 import PropTypes from "prop-types";
-import Pagination from "../common/Pagination";
 
 class YTEditor extends React.Component{
 
@@ -51,7 +50,7 @@ class YTEditor extends React.Component{
     render(){
 
         const editorProps = {
-            value: this.state.value,
+            value: this.props.value?this.props.value:this.state.value,
             getMdeInstance: simplemde => {
                 this.simplemde = simplemde;
             },
@@ -128,7 +127,8 @@ class YTEditor extends React.Component{
 }
 
 
-Pagination.propTypes={
+YTEditor.propTypes={
+    value:PropTypes.string.isRequired,
     authToken:PropTypes.string.isRequired,
     updateMarkdown:PropTypes.func.isRequired,
 }

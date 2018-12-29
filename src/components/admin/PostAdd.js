@@ -185,7 +185,7 @@ class PostAdd extends React.Component{
                                     </div>
                                     <div className="form-group">
                                         <label>正文,提示：图片可以直接粘贴或者拖拽自动上传</label>
-                                        <YTEditor updateMarkdown={this.updateMarkdown} authToken={auth.token}/>
+                                        <YTEditor updateMarkdown={this.updateMarkdown} authToken={auth.token} defaultValue=''/>
                                         {errors.contentMD && <InlineError text={errors.contentMD} />}
                                     </div>
                                     <div className="checkbox">
