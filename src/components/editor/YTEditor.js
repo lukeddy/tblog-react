@@ -50,7 +50,7 @@ class YTEditor extends React.Component{
     render(){
 
         const editorProps = {
-            value: this.props.value?this.props.value:this.state.value,
+            value: this.props.defaultValue,
             getMdeInstance: simplemde => {
                 this.simplemde = simplemde;
             },
@@ -128,7 +128,7 @@ class YTEditor extends React.Component{
 
 
 YTEditor.propTypes={
-    value:PropTypes.string.isRequired,
+    defaultValue:PropTypes.string.isRequired,
     authToken:PropTypes.string.isRequired,
     updateMarkdown:PropTypes.func.isRequired,
 }

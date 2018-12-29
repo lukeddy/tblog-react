@@ -32,7 +32,6 @@ class PostEdit extends React.Component{
                 top:false,
                 good:false,
             },
-            post:{},
             allCategory:[],
             loading:false,
             errors:{},
@@ -50,7 +49,40 @@ class PostEdit extends React.Component{
         this.props.getPost(postId).then((response)=>{
             if(response.data.status){
                 console.log('post edit:',response.data.data)
-                this.setState({post:response.data.data});
+                this.setState({
+                    data: { ...this.state.data, catId:response.data.data.category.id}
+                });
+                this.setState({
+                    data: { ...this.state.data, title:response.data.data.title}
+                });
+                this.setState({
+                    data: { ...this.state.data, desc:response.data.data.desc}
+                });
+                let tagsArr =response.data.data.tags;
+                console.log('tags:',tagsArr);
+                if(tagsArr!=null){
+                    this.setState({
+                        data: { ...this.state.data, tags:tagsArr.join(",")}
+                    });
+                }
+                this.setState({
+                    data: { ...this.state.data, contentMD:response.data.data.contentMD}
+                });
+                this.setState({
+                    data: { ...this.state.data, contentHTML:response.data.data.contentHTML}
+                });
+                this.setState({
+                    data: { ...this.state.data, contentIsHTML:response.data.data.contentIsHTML}
+                });
+                this.setState({
+                    data: { ...this.state.data, top:response.data.data.top}
+                });
+                this.setState({
+                    data: { ...this.state.data, good:response.data.data.good}
+                });
+                this.setState({
+                    data: { ...this.state.data, thumbURL:response.data.data.thumbURL}
+                });
                 this.setState({
                     data: { ...this.state.data, thumbURL:response.data.data.thumbURL}
                 });
@@ -153,7 +185,7 @@ class PostEdit extends React.Component{
     }
 
     render(){
-        const {post,data,allCategory,alertData,errors,loading}=this.state
+        const {data,allCategory,alertData,errors,loading}=this.state
         const {auth}=this.props
 
         return(
@@ -162,17 +194,17 @@ class PostEdit extends React.Component{
                     <ul className="breadcrumb">
                         <li><Link to="/">主页</Link><span className="divider"></span></li>
                         <li><Link to="/post">帖子管理</Link><span className="divider"></span></li>
-                        <li className="active">修改帖子</li>
+                        <li className="active">新建帖子</li>
                     </ul>
                     <div className="panel">
                         <div className="panel-body">
                             <Alert alertData={alertData}/>
-                            <h4>修改帖子</h4>
+                            <h4>新建帖子</h4>
                             <form onSubmit={this.onSubmit}>
                                 <div className="form-group">
                                     <div className="input-group">
                                         <div className="input-group-addon">栏目:</div>
-                                        <select id="catId" name="catId" className="form-control" value={post.category==null?null:post.category.id} onChange={this.onChange}>
+                                        <select id="catId" name="catId" className="form-control" value={data.catId} onChange={this.onChange}>
                                             <option value="">---请先选择栏目---</option>
                                             {allCategory.length>0 && allCategory.map((cat) => {
                                                 return(
@@ -186,39 +218,39 @@ class PostEdit extends React.Component{
                                 <div className="form-group">
                                     <div className="input-group">
                                         <div className="input-group-addon">标题*:</div>
-                                        <input type="text" name="title" className="form-control"  placeholder="输入帖子标题" value={post.title} onChange={this.onChange}/>
+                                        <input type="text" name="title" className="form-control"  placeholder="输入帖子标题" value={data.title} onChange={this.onChange}/>
                                     </div>
                                     {errors.title && <InlineError text={errors.title} />}
                                 </div>
                                 <div className="form-group">
                                     <div className="input-group">
                                         <div className="input-group-addon">摘要:</div>
-                                        <textarea name="desc" className="form-control" rows="3" placeholder="输入摘要" value={post.desc} onChange={this.onChange}></textarea>
+                                        <textarea name="desc" className="form-control" rows="3" placeholder="输入摘要" value={data.desc} onChange={this.onChange}></textarea>
                                     </div>
                                     {errors.desc && <InlineError text={errors.desc} />}
                                 </div>
                                 <div className="form-group">
                                     <div className="input-group">
                                         <div className="input-group-addon">标签:</div>
-                                        <input type="text" name="tags" className="form-control" placeholder="输入标签" value={post.tags} onChange={this.onChange}/>
+                                        <input type="text" name="tags" className="form-control" placeholder="输入标签" value={data.tags} onChange={this.onChange}/>
                                     </div>
                                     <span className="label-info">注意：标签使用英文逗号分隔</span>
                                     {errors.tags && <InlineError text={errors.tags} />}
                                 </div>
                                 <div className="form-group">
                                     <label>正文,提示：图片可以直接粘贴或者拖拽自动上传</label>
-                                    <YTEditor updateMarkdown={this.updateMarkdown} authToken={auth.token} value={post.contentMD}/>
+                                    <YTEditor updateMarkdown={this.updateMarkdown} authToken={auth.token} defaultValue={data.contentMD}/>
                                     {errors.contentMD && <InlineError text={errors.contentMD} />}
                                 </div>
                                 <div className="checkbox">
                                     <label>
-                                        <input type="checkbox" name="contentIsHTML" value="true" checked={post.contentIsHTML?post.contentIsHTML:false} onChange={this.onChange}/> 是否网页？
+                                        <input type="checkbox" name="contentIsHTML" value="true" defaultChecked={data.contentIsHTML} onChange={this.onChange}/> 是否网页？
                                     </label>
                                     <label>
-                                        <input type="checkbox" name="top" value="true" checked={post.top?post.top:false} onChange={this.onChange}/> 置顶帖？
+                                        <input type="checkbox" name="top" value="true" defaultChecked={data.top} onChange={this.onChange}/> 置顶帖？
                                     </label>
                                     <label>
-                                        <input type="checkbox" name="good" value="true" checked={post.good?post.good:false} onChange={this.onChange}/> 精华帖？
+                                        <input type="checkbox" name="good" value="true" defaultChecked={data.good} onChange={this.onChange}/> 精华帖？
                                     </label>
                                 </div>
 
@@ -238,7 +270,7 @@ class PostEdit extends React.Component{
                                 <Dropzone  accept="image/jpeg, image/png, image/gif"
                                            multiple={false}
                                            onDrop={this.onDrop}
-                                           style={{width:"100%",height:"120px",border:"2px dashed #0087F7",textAlign:"center",background:"#fff",backgroundSize:'cover',backgroundPosition:"center",backgroundImage:'url('+this.state.thumbBG+')',"paddingTop":'90px',"cursor":"pointer","boxSizing":"content-box"}} >
+                                           style={{width:"100%",height:"120px",border:"2px dashed #0087F7",textAlign:"center",background:"#fff",backgroundSize:'cover',backgroundPosition:"center",backgroundImage:'url('+data.thumbBG+')',"paddingTop":'90px',"cursor":"pointer","boxSizing":"content-box"}} >
                                     <p>点击或者拖拽上传<br/>(<strong>文章缩略图</strong>)</p>
                                 </Dropzone>
                             </div>
