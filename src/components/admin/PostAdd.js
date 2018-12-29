@@ -9,6 +9,8 @@ import {fetchAllCategory} from '../../actions/categoryActions';
 import {uploadFile} from '../../actions/uploadActions';
 import {getUserInfo} from '../../actions/userActions';
 import {createPost} from '../../actions/postActions';
+import YTEditor from '../editor/YTEditor';
+import PropTypes from "prop-types";
 
 class PostAdd extends React.Component{
 
@@ -24,7 +26,7 @@ class PostAdd extends React.Component{
                 thumbURL:null,
                 thumbBG:null,
                 contentMD:"",
-                contentHtml:null,
+                contentHTML:"",
                 contentIsHTML:false,
                 top:false,
                 good:false,
@@ -36,6 +38,7 @@ class PostAdd extends React.Component{
         }
         this.onChange=this.onChange.bind(this);
         this.onSubmit=this.onSubmit.bind(this);
+        this.updateMarkdown=this.updateMarkdown.bind(this);
     }
 
     componentDidMount(){
@@ -116,9 +119,20 @@ class PostAdd extends React.Component{
             this.setState({alertData:{status:false,msg:error.toString()}});
         });
     }
+    updateMarkdown(markdown,html){
+        // console.log('md:',markdown)
+        // console.log('html:',html)
+        this.setState({
+            data: { ...this.state.data, contentMD:markdown}
+        });
+        this.setState({
+            data: { ...this.state.data, contentHTML:html}
+        });
+    }
 
     render(){
         const {data,allCategory,alertData,errors,loading}=this.state
+        const {auth}=this.props
 
         return(
             <div className="container main">
@@ -170,8 +184,8 @@ class PostAdd extends React.Component{
                                         {errors.tags && <InlineError text={errors.tags} />}
                                     </div>
                                     <div className="form-group">
-                                        <label>正文</label>
-                                        <textarea className="form-control" name="contentMD" value={data.contentMD} onChange={this.onChange} placeholder="不要吝啬您的评论，您的一言将帮助千万网友" rows={6} cols={3}></textarea>
+                                        <label>正文,提示：图片可以直接粘贴或者拖拽自动上传</label>
+                                        <YTEditor updateMarkdown={this.updateMarkdown} authToken={auth.token}/>
                                         {errors.contentMD && <InlineError text={errors.contentMD} />}
                                     </div>
                                     <div className="checkbox">
@@ -215,4 +229,15 @@ class PostAdd extends React.Component{
     }
 }
 
-export default connect(null,{fetchAllCategory,uploadFile,getUserInfo,createPost})(PostAdd)
+PropTypes.propTypes={
+    auth:PropTypes.object.isRequired
+}
+
+
+function mapStateToProps(state) {
+    return {
+        auth:state.authReducer
+    };
+}
+
+export default connect(mapStateToProps,{fetchAllCategory,uploadFile,getUserInfo,createPost})(PostAdd)
