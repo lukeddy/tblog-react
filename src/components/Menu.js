@@ -21,13 +21,13 @@ class Menu extends React.Component{
 
                 {catList.length>6 &&
                     <span className="dropdown">
-                        <a href="/" className="dropdown-toggle topic-tab" data-toggle="dropdown" role="button"
-                           aria-haspopup="true" aria-expanded="false">更多 <span className="caret"></span></a>
+                        <a href="/" className="dropdown-toggle topic-tab" data-toggle="dropdown">更多 <span className="caret"></span></a>
                         <ul className="dropdown-menu">
                           {catList.slice(6,catList.length).map((cat,index)=>{
                               return (
-                                  <li key={index} className="topic-tab">
-                                    <span key={index} onClick={this.clickTab.bind(this,cat.catDir)} className={`link topic-tab ${currentTab===cat.catDir?'current-tab':''}`}>{cat.catName}</span>
+                                  <li key={index} onClick={this.clickTab.bind(this,cat.catDir)}
+                                      className={`link topic-tab ${currentTab===cat.catDir?'current-tab':''}`}>
+                                      <span>{cat.catName}</span>
                                   </li>
                               )
                           })}
