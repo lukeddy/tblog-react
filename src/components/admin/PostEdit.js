@@ -117,8 +117,12 @@ class PostEdit extends React.Component{
     }
 
     onChange(e){
+        const target = e.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
         this.setState({
-            data: { ...this.state.data, [e.target.name]: e.target.value }
+            data: { ...this.state.data, [name]: value }
         });
     }
 
@@ -244,13 +248,13 @@ class PostEdit extends React.Component{
                                 </div>
                                 <div className="checkbox">
                                     <label>
-                                        <input type="checkbox" name="contentIsHTML" value="true" defaultChecked={data.contentIsHTML} onChange={this.onChange}/> 是否网页？
+                                        <input type="checkbox" name="contentIsHTML" value="true" checked={data.contentIsHTML} onChange={this.onChange}/> 是否网页？
                                     </label>
                                     <label>
-                                        <input type="checkbox" name="top" value="true" defaultChecked={data.top} onChange={this.onChange}/> 置顶帖？
+                                        <input type="checkbox" name="top" value="true" checked={data.top} onChange={this.onChange}/> 置顶帖？
                                     </label>
                                     <label>
-                                        <input type="checkbox" name="good" value="true" defaultChecked={data.good} onChange={this.onChange}/> 精华帖？
+                                        <input type="checkbox" name="good" value="true" checked={data.good} onChange={this.onChange}/> 精华帖？
                                     </label>
                                 </div>
 

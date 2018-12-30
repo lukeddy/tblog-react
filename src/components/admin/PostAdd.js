@@ -64,8 +64,12 @@ class PostAdd extends React.Component{
     }
 
     onChange(e){
+        const target = e.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
         this.setState({
-            data: { ...this.state.data, [e.target.name]: e.target.value }
+            data: { ...this.state.data, [name]: value }
         });
     }
     onSubmit(e){
@@ -185,7 +189,7 @@ class PostAdd extends React.Component{
                                     </div>
                                     <div className="form-group">
                                         <label>正文,提示：图片可以直接粘贴或者拖拽自动上传</label>
-                                        <YTEditor updateMarkdown={this.updateMarkdown} authToken={auth.token} defaultValue=''/>
+                                        <YTEditor updateMarkdown={this.updateMarkdown} authToken={auth.token} defaultValue={data.contentMD} />
                                         {errors.contentMD && <InlineError text={errors.contentMD} />}
                                     </div>
                                     <div className="checkbox">
