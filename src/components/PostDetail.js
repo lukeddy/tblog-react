@@ -25,7 +25,7 @@ class PostDetail extends React.Component{
         this.setState({loading:true});
         this.props.getPost(postId).then((response)=>{
             this.setState({loading:false});
-            console.log('get post:',response.data.data)
+            //console.log('get post:',response.data.data)
             if(response.data.status){
                 this.setState({post:response.data.data})
             }else{

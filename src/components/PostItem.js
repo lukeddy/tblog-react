@@ -7,35 +7,6 @@ class PostItem extends React.Component{
     render(){
 
         const {post}=this.props
-        console.log(post)
-
-        // author: {id: "5b616fa705bbe40c86a7f804", createAt: null, updateAt: null, createAtFormatted: null, updateAtFormatted: null, …}
-        // category: {id: "5c0a4ae2796b0e1c0fc9c026", createAt: "2018-12-07T10:26:42.877+0000", updateAt: "2018-12-07T10:26:42.877+0000", createAtFormatted: "2018-12-07 18:26:42", updateAtFormatted: "2018-12-07 18:26:42", …}
-        // collectCount: 0
-        // collectedUsers: null
-        // contentHTML: "<p>在CentOS7服务器上编译源码安装Node.js<br>在CentOS7服务器上编译源码安装Node.js</p>↵<ol>↵<li>slffdsfhsf</li>↵<li>sdffsfsfsdf</li>↵<li>sdfsfsfsfdsfds</li>↵</ol>↵<table>↵<thead>↵<tr>↵<th>Column 1</th>↵<th>Column 2</th>↵<th>Column 3</th>↵</tr>↵</thead>↵<tbody><tr>↵<td>Text</td>↵<td>Text</td>↵<td>Text</td>↵</tr>↵</tbody></table>↵"
-        // contentIsHTML: false
-        // contentMD: "在CentOS7服务器上编译源码安装Node.js↵在CentOS7服务器上编译源码安装Node.js↵1. slffdsfhsf↵2. sdffsfsfsdf↵3. sdfsfsfsfdsfds↵↵| Column 1 | Column 2 | Column 3 |↵| -------- | -------- | -------- |↵| Text     | Text     | Text     |↵↵"
-        // createAt: "2018-12-30T07:34:07.686+0000"
-        // createAtFormatted: "2018-12-30 15:34:07"
-        // deleted: false
-        // desc: "在CentOS7服务器上编译源码安装Node.js"
-        // friendlyTime: "1小时前"
-        // good: false
-        // id: "5c2874efa0b84708f146bf61"
-        // lastReplyAt: null
-        // lastReplyId: null
-        // likedUsers: null
-        // lock: false
-        // new: false
-        // replyCount: 0
-        // tags: (3) ["centos", "ssh", "java"]
-        // thumbURL: null
-        // title: "在CentOS7服务器上编译源码安装Node.js"
-        // top: false
-        // updateAt: "2018-12-30T07:34:07.686+0000"
-        // updateAtFormatted: "2018-12-30 15:34:07"
-        // visitCount: 2
 
         return (
             <li className="post-item">
@@ -92,8 +63,7 @@ class PostItem extends React.Component{
                                 </div>
                             </div>
                         </div>
-
-                        <div className="thumb-box"></div>
+                        <div className="thumb-box" style={{backgroundSize: 'cover',backgroundImage:'url('+process.env.REACT_APP_BASE_URL+post.thumbURL+')'}}></div>
                     </div>
                 </div>
             </li>
