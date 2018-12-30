@@ -62,6 +62,11 @@ class PostDetail extends React.Component{
                                     </div>
                                 </div>
                                 <div className="inner topic">
+                                    <div className="row text-center topic-thumb">
+                                        <img src={process.env.REACT_APP_BASE_URL+post.thumbURL}
+                                             alt={post.title} style={{maxWidth:"100%",height:"auto"}}/>
+                                    </div>
+                                    <div className="row well">{post.desc}</div>
                                     <div className="topic-content">
                                         <div dangerouslySetInnerHTML={{__html: post.contentHTML}}></div>
                                     </div>
