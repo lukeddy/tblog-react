@@ -1,5 +1,18 @@
 import axios from "axios";
 
+
+export function fetchHomeData(data) {
+    return dispatch => {
+        return new Promise((resolve, reject) => {
+            axios.post("/home", data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        });
+    }
+}
+
 export function fetchPostList(data) {
     return dispatch => {
         return new Promise((resolve, reject) => {
