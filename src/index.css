@@ -562,6 +562,10 @@ code {
 .pagination{
   margin-left:20px;
 }
+.link{
+  color:#08c;
+  cursor: pointer;
+}
 .pagination .page-link{
   cursor: pointer;
 }

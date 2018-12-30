@@ -48,3 +48,15 @@ export function updatePost(postId,data) {
         });
     }
 }
+
+export function deletePost(postId) {
+    return dispatch => {
+        return new Promise((resolve, reject) => {
+            axios.delete("/post/"+postId).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        });
+    }
+}

@@ -3,7 +3,7 @@ import Pagination from "../common/Pagination";
 import Advertise from "../Advertise";
 import {Link} from "react-router-dom";
 import {connect} from 'react-redux';
-import {fetchPostList} from '../../actions/postActions';
+import {fetchPostList,deletePost} from '../../actions/postActions';
 import Alert from '../common/Alert';
 
 class Post extends React.Component{
@@ -42,12 +42,25 @@ class Post extends React.Component{
         this.setState({currentPage:pageNo},this.loadData(pageNo))
     }
 
+    handleDelete=(postId)=>{
+        this.props.deletePost(postId).then((response)=>{
+            if(response.data.status){
+                console.log('post delete:',response.data.data)
+                this.setState({alertData:response.data});
+                this.loadData(this.state.currentPage)
+            }
+        }).catch(error=>{
+            console.log(error);
+            this.setState({alertData:{status:false,msg:"删除帖子信息失败"}});
+        });
+    }
+
     render(){
 
         const {pager,alertData,loading}=this.state;
 
         let postItems=null;
-        if(pager&&pager.content){
+        if(pager&&pager.totalPages>0){
             postItems = pager.content.map((post) =>
                 <tr key={post.id}>
                     <td>
@@ -58,7 +71,7 @@ class Post extends React.Component{
                     <td>{post.updateAtFormatted}</td>
                     <td>
                         <Link to={'/postedit/'+post.id}>修改</Link>
-                        <Link to={'/postdelete/'+post.id}>删除</Link>
+                        <span className='link' onClick={this.handleDelete.bind(this,post.id)}>删除</span>
                     </td>
                 </tr>
             );
@@ -95,7 +108,7 @@ class Post extends React.Component{
                                     {postItems}
                                 </tbody>
                             </table>
-                            {pager.totalPages &&<Pagination totalPages={pager.totalPages} currentPage={pager.number+1} jumpPage={this.goToPage}/> }
+                            {pager.totalPages>0 &&<Pagination totalPages={pager.totalPages} currentPage={pager.number+1} jumpPage={this.goToPage}/> }
                         </div>
                     </div>
                 </div>
@@ -105,4 +118,4 @@ class Post extends React.Component{
 }
 
 
-export default connect(null,{fetchPostList})(Post)
+export default connect(null,{fetchPostList,deletePost})(Post)
