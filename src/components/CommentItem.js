@@ -5,7 +5,7 @@ import {deleteComment,thumbsupComment,banBadComment} from '../actions/commentAct
 import Alert from './common/Alert';
 import CommentReply from './CommentReply';
 import CommentReplyForm from "./CommentReplyForm";
-import CommentBanForm from './CommentBanForm';
+import CommentBanDialog from './CommentBanDialog';
 
 class CommentItem extends React.Component{
 
@@ -47,23 +47,16 @@ class CommentItem extends React.Component{
     }
 
     banClicked=(commentId)=>{
-        console.log('ban',commentId)
-        this.refs.banForm.showDialog();
+        //console.log('ban',commentId)
+        this.showDialog(true)
     }
 
-    banComment=(data)=>{
-        console.log('ban comment',data)
-        this.props.banBadComment(this.props.comment.id,data).then((response)=>{
-            this.refs.banForm.showResult(response.data);
-        }).catch(error=>{
-            console.log(error);
-            this.refs.banForm.showResult({status:false,msg:"回复评论失败:"+error.toString()});
-            //this.setState({alertData:{status:false,msg:"回复评论失败:"+error.toString()}});
-        });
+    showDialog=(showStatus)=>{
+        this.setState({dialogShow:showStatus})
     }
 
     render(){
-        const {alertData,currentReplyForm}=this.state
+        const {alertData,currentReplyForm,dialogShow}=this.state
         const {comment,auth}=this.props
         return(
             <div className="comment" id="5ba4accfbf578d447ea53384">
@@ -106,7 +99,10 @@ class CommentItem extends React.Component{
                     }
                 </div>
                 <Alert alertData={alertData}/>
-                <CommentBanForm comment={comment} banComment={this.banComment} ref="banForm"/>
+
+                <CommentBanDialog comment={comment}
+                                  show={dialogShow}
+                                  showDialog={this.showDialog}/>
             </div>
         );
     }

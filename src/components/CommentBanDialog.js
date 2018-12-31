@@ -7,24 +7,18 @@ import Alert from './common/Alert';
 
 class CommentBanDialog extends React.Component{
 
-    constructor(props){
-        super(props)
-
-        this.state = {
-            reason:'1',
-            memo:'',
-            alertData:{},
-            show: false
-        }
+    state = {
+        reason:'1',
+        memo:'',
+        alertData:{},
     }
 
-
     showDialog=()=> {
-        this.setState({ show: true });
+        this.props.showDialog(true)
     }
 
     hideDialog=()=> {
-        this.setState({ show: false });
+        this.props.showDialog(false)
     }
 
     onChange=(e)=>{
@@ -33,21 +27,17 @@ class CommentBanDialog extends React.Component{
 
     onSubmit=(e)=>{
         e.preventDefault();
-        //const {comment}=this.props
         const data={
             reason:this.state.reason,
             memo:this.state.memo
         }
 
-        console.log(this.props.comment.id, data)
+        //console.log(this.props.comment.id, data)
         this.props.banBadComment(this.props.comment.id,data).then((response)=>{
             this.setState({alertData:response.data});
-            if(response.data.status){
-                this.props.reloadComments();
-            }
         }).catch(error=>{
             console.log(error);
-            this.setState({alertData:{status:false,msg:"回复评论失败:"+error.toString()}});
+            this.setState({alertData:{status:false,msg:"举报评论失败:"+error.toString()}});
         });
     }
 
@@ -57,20 +47,15 @@ class CommentBanDialog extends React.Component{
 
         return(
             <div>
-
-                <button onClick={this.showDialog}>显示</button>
-
-                <Modal {...this.props}
-                       show={this.state.show}
+                <Modal show={this.props.show}
                        onHide={this.hideDialog}>
-
                     <Modal.Header closeButton>
                         <Modal.Title>
                             <p className="modal-title" style={{fontSize: "1.1em",lineHeight:"1.1em",fontWeight: 600}}>举报理由</p>
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-
+                        <Alert alertData={alertData}/>
                         <form onSubmit={this.onSubmit}>
                             <div className="form-group">
                                 <label className="radio-inline">
@@ -94,7 +79,6 @@ class CommentBanDialog extends React.Component{
                                 <button type="button" className="btn btn-default" onClick={this.hideDialog}>关闭</button>&nbsp;&nbsp;
                                 <button type="submit" className="btn btn-success">确定</button>
                             </div>
-                            <Alert alertData={alertData}/>
                         </form>
                     </Modal.Body>
                 </Modal>
@@ -104,6 +88,8 @@ class CommentBanDialog extends React.Component{
 }
 
 PropTypes.propTypes={
+    show:PropTypes.bool.isRequired,
+    showDialog:PropTypes.func.isRequired,
     comment:PropTypes.object.isRequired,
 }
 
