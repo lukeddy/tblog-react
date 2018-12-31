@@ -4,10 +4,12 @@ import {connect} from 'react-redux';
 import {deleteComment,thumbsupComment} from '../actions/commentActions';
 import Alert from './common/Alert';
 import CommentReply from './CommentReply';
+import CommentReplyForm from "./CommentReplyForm";
 
 class CommentItem extends React.Component{
 
     state={
+        currentReplyForm:null,
         alertData:{},
     }
 
@@ -23,7 +25,6 @@ class CommentItem extends React.Component{
             console.log(error);
             this.setState({alertData:{status:false,msg:"点赞评论失败:"+error.toString()}});
         });
-        this.props.reloadComments();
     }
     deleteClicked=(commentId)=>{
         console.log('delete',commentId)
@@ -40,7 +41,7 @@ class CommentItem extends React.Component{
     }
     replyClicked=(commentId)=>{
         console.log('reply',commentId)
-        this.props.reloadComments();
+        this.setState({currentReplyForm:commentId})
     }
 
     banClicked=(commentId)=>{
@@ -49,7 +50,7 @@ class CommentItem extends React.Component{
     }
 
     render(){
-        const {alertData}=this.state
+        const {alertData,currentReplyForm}=this.state
         const {comment,auth}=this.props
         return(
             <div className="comment" id="5ba4accfbf578d447ea53384">
@@ -83,7 +84,13 @@ class CommentItem extends React.Component{
                             <i className="fa fa-ban"></i> 举报
                         </span>
                     </div>
-                    <div className="reply-box" id="replyBox5ba4accfbf578d447ea53384"></div>
+                    {currentReplyForm &&
+                        <div className="reply-box">
+                            <CommentReplyForm
+                                comment={comment}
+                                reloadComments={this.props.reloadComments}/>
+                        </div>
+                    }
                 </div>
                 <Alert alertData={alertData}/>
             </div>

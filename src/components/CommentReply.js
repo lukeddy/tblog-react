@@ -5,7 +5,7 @@ class CommentReply extends React.Component{
     render(){
         const {parentComment}=this.props
         return(
-            <div class="ref">
+            <div className="ref">
                 {/*递归调用自身*/}
                 {parentComment.parentComment &&<CommentReply parentComment={parentComment.parentComment}/> }
                 {parentComment.author &&<h4>引用来自“{parentComment.author.username}”的评论</h4>}

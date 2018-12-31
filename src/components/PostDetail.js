@@ -56,7 +56,7 @@ class PostDetail extends React.Component{
     }
 
     reloadComments=()=>{
-        //console.log('reload comments',this.state.postId)
+        console.log('reload comments',this.state.postId)
         this.loadComments(this.state.postId)
     }
 

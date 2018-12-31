@@ -49,3 +49,15 @@ export function thumbsupComment(commentId) {
         });
     }
 }
+
+export function replyComment(data) {
+    return dispatch => {
+        return new Promise((resolve, reject) => {
+            axios.post("/comment/reply",data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        });
+    }
+}
