@@ -8,6 +8,7 @@ import Comment from "./Comment";
 import {Link} from "react-router-dom";
 import {connect} from 'react-redux';
 import {getPost} from '../actions/postActions';
+import {getComments} from '../actions/commentActions';
 import Alert from './common/Alert';
 
 class PostDetail extends React.Component{
@@ -15,6 +16,7 @@ class PostDetail extends React.Component{
     state={
         postId:null,
         post:null,
+        comments:[],
         loading:false,
         alertData:{},
     }
@@ -28,6 +30,7 @@ class PostDetail extends React.Component{
             //console.log('get post:',response.data.data)
             if(response.data.status){
                 this.setState({post:response.data.data})
+                this.loadComments(postId)
             }else{
                 this.setState({alertData:response.data});
             }
@@ -38,8 +41,35 @@ class PostDetail extends React.Component{
         });
     }
 
+    loadComments(postId){
+        this.props.getComments(postId).then((response)=>{
+            console.log('get comments:',response.data.data)
+            if(response.data.status){
+                this.setState({comments:response.data.data})
+            }else{
+                this.setState({alertData:response.data});
+            }
+        }).catch(error=>{
+            console.log(error);
+            this.setState({alertData:{status:false,msg:"获取帖子评论失败"}});
+        });
+    }
+
+    likeComment=(commentId)=>{
+        console.log('like comment:',commentId)
+    }
+    deleteComment=(commentId)=>{
+        console.log('delete comment:',commentId)
+    }
+    replyComment=(commentId)=>{
+        console.log('reply comment:',commentId)
+    }
+    banComment=(commentId)=>{
+        console.log('ban commemt:',commentId)
+    }
+
     render(){
-        const {post,loading,alertData}=this.state
+        const {post,loading,alertData,comments}=this.state
 
         return(
             <div className="container main">
@@ -105,7 +135,11 @@ class PostDetail extends React.Component{
                                     </div>
                                 </div>
                             </div>
-                               <Comment></Comment>
+                               <Comment comments={comments}
+                                        likeComment={this.likeComment}
+                                        replyComment={this.replyComment}
+                                        banComment={this.banComment}
+                                        deleteComment={this.deleteComment}/>
                             </div>
                         }
                     </div>
@@ -117,4 +151,4 @@ class PostDetail extends React.Component{
     }
 }
 
-export default connect(null,{getPost})(PostDetail)
+export default connect(null,{getPost,getComments})(PostDetail)

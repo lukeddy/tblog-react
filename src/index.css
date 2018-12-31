@@ -524,6 +524,10 @@ code {
   margin: 0 .75em 0 0;
   color: rgba(0,0,0,.4);
 }
+.comment .operations .op-icon{
+  cursor: pointer;
+  margin-right:6px;
+}
 /*评论结束*/
 
 
