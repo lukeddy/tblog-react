@@ -55,17 +55,9 @@ class PostDetail extends React.Component{
         });
     }
 
-    likeComment=(commentId)=>{
-        console.log('like comment:',commentId)
-    }
-    deleteComment=(commentId)=>{
-        console.log('delete comment:',commentId)
-    }
-    replyComment=(commentId)=>{
-        console.log('reply comment:',commentId)
-    }
-    banComment=(commentId)=>{
-        console.log('ban commemt:',commentId)
+    reloadComments(){
+        console.log('reload comments')
+        //this.loadComments(this.state.postId)
     }
 
     render(){
@@ -136,10 +128,7 @@ class PostDetail extends React.Component{
                                 </div>
                             </div>
                                <Comment comments={comments}
-                                        likeComment={this.likeComment}
-                                        replyComment={this.replyComment}
-                                        banComment={this.banComment}
-                                        deleteComment={this.deleteComment}/>
+                                        reloadComments={this.reloadComments}/>
                             </div>
                         }
                     </div>

@@ -4,17 +4,21 @@ import PropTypes from 'prop-types';
 class CommentItem extends React.Component{
 
     thumbsUpClicked=(commentId)=>{
-        this.props.likeComment(commentId)
+        console.log('thumbs up',commentId)
+        this.props.reloadComments();
     }
     deleteClicked=(commentId)=>{
-        this.props.deleteComment(commentId)
+        console.log('delete',commentId)
+        this.props.reloadComments();
     }
     replyClicked=(commentId)=>{
-        this.props.replyComment(commentId)
+        console.log('reply',commentId)
+        this.props.reloadComments();
     }
 
     banClicked=(commentId)=>{
-        this.props.banComment(commentId)
+        console.log('ban',commentId)
+        this.props.reloadComments();
     }
 
     render(){
@@ -55,10 +59,7 @@ class CommentItem extends React.Component{
 
 PropTypes.propTypes={
     comment:PropTypes.object.isRequired,
-    likeComment:PropTypes.func.isRequired,
-    replyComment:PropTypes.func.isRequired,
-    banComment:PropTypes.func.isRequired,
-    deleteComment:PropTypes.func.isRequired,
+    reloadComments:PropTypes.func.isRequired,
 }
 
 export default CommentItem

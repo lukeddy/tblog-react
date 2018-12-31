@@ -12,11 +12,9 @@ class Comment extends React.Component{
             <div className="row comment-wrapper">
                 <h3 className="header">{comments?comments.length:0} 条评论</h3>
                 {comments&&comments.length>0 && comments.map((comment,index)=>{
-                    return (<CommentItem key={index} comment={comment}
-                                         likeComment={this.props.likeComment}
-                                         replyComment={this.props.replyComment}
-                                         banComment={this.props.banComment}
-                                         deleteComment={this.props.deleteComment}/>)
+                    return (<CommentItem key={index}
+                                         comment={comment}
+                                         reloadComments={this.props.reloadComments}/>)
                 })}
                 <CommentForm></CommentForm>
             </div>
@@ -26,10 +24,7 @@ class Comment extends React.Component{
 
 PropTypes.propTypes={
     comments:PropTypes.array.isRequired,
-    likeComment:PropTypes.func.isRequired,
-    replyComment:PropTypes.func.isRequired,
-    banComment:PropTypes.func.isRequired,
-    deleteComment:PropTypes.func.isRequired
+    reloadComments:PropTypes.func.isRequired,
 }
 
 export default Comment
