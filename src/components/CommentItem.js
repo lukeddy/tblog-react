@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {deleteComment,thumbsupComment} from '../actions/commentActions';
 import Alert from './common/Alert';
+import CommentReply from './CommentReply';
 
 class CommentItem extends React.Component{
 
@@ -61,6 +62,7 @@ class CommentItem extends React.Component{
                         <span className="date">{comment.friendlyTime}</span>
                     </div>
                     <div className="text">
+                        {comment.parentComment &&<CommentReply parentComment={comment.parentComment}/>}
                         <p dangerouslySetInnerHTML={{__html: comment.commentHTML}}></p>
                     </div>
                     <div className="operations">
