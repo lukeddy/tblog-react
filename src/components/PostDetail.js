@@ -43,7 +43,7 @@ class PostDetail extends React.Component{
 
     loadComments(postId){
         this.props.getComments(postId).then((response)=>{
-            console.log('get comments:',response.data.data)
+            //console.log('get comments:',response.data.data)
             if(response.data.status){
                 this.setState({comments:response.data.data})
             }else{
@@ -55,9 +55,9 @@ class PostDetail extends React.Component{
         });
     }
 
-    reloadComments(){
-        console.log('reload comments')
-        //this.loadComments(this.state.postId)
+    reloadComments=()=>{
+        //console.log('reload comments',this.state.postId)
+        this.loadComments(this.state.postId)
     }
 
     render(){
@@ -127,7 +127,8 @@ class PostDetail extends React.Component{
                                     </div>
                                 </div>
                             </div>
-                               <Comment comments={comments}
+                               <Comment postId={this.state.postId}
+                                        comments={comments}
                                         reloadComments={this.reloadComments}/>
                             </div>
                         }

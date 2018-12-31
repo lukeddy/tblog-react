@@ -583,3 +583,7 @@ code {
 .editor-toolbar.fullscreen{
   z-index:9999 !important;
 }
+
+.CodeMirror, .CodeMirror-scroll {
+  min-height: 120px !important;
+}

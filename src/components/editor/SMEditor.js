@@ -3,7 +3,7 @@ import SimpleMDE from 'react-simplemde-editor';
 import "simplemde/dist/simplemde.min.css";
 import marked from 'marked';
 import highlight from 'highlight.js';
-
+import PropTypes from "prop-types";
 
 class SMEditor extends React.Component{
 
@@ -13,8 +13,9 @@ class SMEditor extends React.Component{
     };
 
     handleChange=(value)=>{
-        this.setState({markdown:value},console.log(this.state.markdown))
-        this.setState({html:this.markdown2Html(value)},console.log(this.state.html))
+        this.setState({markdown:value})
+        this.setState({html:this.markdown2Html(value)})
+        this.props.updateMarkdown(value,this.markdown2Html(value))
     };
 
     markdown2Html=(markdown)=>{
@@ -28,11 +29,10 @@ class SMEditor extends React.Component{
                 smartLists: true,
                 smartypants: true,
                 highlight: function (code) {
-                    console.log('code',code)
+                    //console.log('code',code)
                     return highlight.highlightAuto(code).value;
                 }
         });
-        console.log('parse:',html);
         return html;
     }
 
@@ -40,7 +40,7 @@ class SMEditor extends React.Component{
     render(){
 
       const editorOptions={
-              toolbar: [
+              toolbar:this.props.toolbar?this.props.toolbar:[
                   'bold',
                   'italic',
                   'heading',
@@ -75,16 +75,6 @@ class SMEditor extends React.Component{
                   },
               ],
             renderer: this.markdown2Html,
-            gfm: true,
-            tables: true,
-            breaks: true,
-            pedantic: false,
-            sanitize: true,
-            smartLists: true,
-            smartypants: false,
-            highlight: function(code) {
-                return highlight.highlightAuto(code).value;
-            },
         }
 
         return(
@@ -94,6 +84,11 @@ class SMEditor extends React.Component{
             />
         );
     }
+}
+
+SMEditor.propTypes={
+    defaultValue:PropTypes.string.isRequired,
+    updateMarkdown:PropTypes.func.isRequired,
 }
 
 export default SMEditor

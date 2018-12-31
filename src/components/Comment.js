@@ -16,13 +16,15 @@ class Comment extends React.Component{
                                          comment={comment}
                                          reloadComments={this.props.reloadComments}/>)
                 })}
-                <CommentForm></CommentForm>
+                <CommentForm postId={this.props.postId}
+                             reloadComments={this.props.reloadComments}/>
             </div>
         );
     }
 }
 
 PropTypes.propTypes={
+    postId:PropTypes.string.isRequired,
     comments:PropTypes.array.isRequired,
     reloadComments:PropTypes.func.isRequired,
 }

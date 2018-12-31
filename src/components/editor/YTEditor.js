@@ -72,7 +72,7 @@ class YTEditor extends React.Component{
                 },
                 previewRender: this.renderMarkdown, // 自定义预览渲染
                 tabSize: 4,
-                toolbar: [
+                toolbar:this.props.toolbar?this.props.toolbar:[
                     'bold',
                     'italic',
                     'heading',

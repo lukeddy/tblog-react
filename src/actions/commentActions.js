@@ -12,3 +12,40 @@ export function getComments(postId) {
         });
     }
 }
+
+export function addComment(data) {
+    return dispatch => {
+        return new Promise((resolve, reject) => {
+            axios.post("/comment/",data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        });
+    }
+}
+
+
+export function deleteComment(commentId) {
+    return dispatch => {
+        return new Promise((resolve, reject) => {
+            axios.delete("/comment/"+commentId).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        });
+    }
+}
+
+export function thumbsupComment(commentId) {
+    return dispatch => {
+        return new Promise((resolve, reject) => {
+            axios.put("/comment/thumbsup/"+commentId).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        });
+    }
+}
