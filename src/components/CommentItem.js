@@ -1,15 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {deleteComment,thumbsupComment} from '../actions/commentActions';
+import {deleteComment,thumbsupComment,banBadComment} from '../actions/commentActions';
 import Alert from './common/Alert';
 import CommentReply from './CommentReply';
 import CommentReplyForm from "./CommentReplyForm";
+import CommentBanForm from './CommentBanForm';
 
 class CommentItem extends React.Component{
 
     state={
         currentReplyForm:null,
+        dialogShow:false,
         alertData:{},
     }
 
@@ -46,7 +48,18 @@ class CommentItem extends React.Component{
 
     banClicked=(commentId)=>{
         console.log('ban',commentId)
-        this.props.reloadComments();
+        this.refs.banForm.showDialog();
+    }
+
+    banComment=(data)=>{
+        console.log('ban comment',data)
+        this.props.banBadComment(this.props.comment.id,data).then((response)=>{
+            this.refs.banForm.showResult(response.data);
+        }).catch(error=>{
+            console.log(error);
+            this.refs.banForm.showResult({status:false,msg:"回复评论失败:"+error.toString()});
+            //this.setState({alertData:{status:false,msg:"回复评论失败:"+error.toString()}});
+        });
     }
 
     render(){
@@ -93,6 +106,7 @@ class CommentItem extends React.Component{
                     }
                 </div>
                 <Alert alertData={alertData}/>
+                <CommentBanForm comment={comment} banComment={this.banComment} ref="banForm"/>
             </div>
         );
     }
@@ -109,4 +123,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps,{deleteComment,thumbsupComment})(CommentItem)
+export default connect(mapStateToProps,{deleteComment,thumbsupComment,banBadComment})(CommentItem)

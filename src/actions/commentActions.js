@@ -61,3 +61,15 @@ export function replyComment(data) {
         });
     }
 }
+
+export function banBadComment(commentId,data) {
+    return dispatch => {
+        return new Promise((resolve, reject) => {
+            axios.put("/comment/ban/"+commentId,data).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        });
+    }
+}
