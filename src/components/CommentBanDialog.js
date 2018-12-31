@@ -19,6 +19,7 @@ class CommentBanDialog extends React.Component{
 
     hideDialog=()=> {
         this.props.showDialog(false)
+        this.setState({alertData:{}});
     }
 
     onChange=(e)=>{
