@@ -10,6 +10,7 @@ import {connect} from 'react-redux';
 import {getPost} from '../actions/postActions';
 import {getComments} from '../actions/commentActions';
 import Alert from './common/Alert';
+import {BarLoader} from 'react-spinners';
 
 const Comment=lazy(()=>import("./Comment"));
 
@@ -67,7 +68,7 @@ class PostDetail extends React.Component{
 
         return(
             <div className="container main">
-                {loading &&<div className="text-center">数据加载中...</div>}
+                {/*{loading &&<div className="text-center">数据加载中...</div>}*/}
                 <div className="col-md-9" id="content">
                         <ul className="breadcrumb">
                             <li><Link to="/">主页</Link><span
@@ -75,6 +76,7 @@ class PostDetail extends React.Component{
                             <li>Java<span className="divider"></span></li>
                         </ul>
                         <Alert alertData={alertData}/>
+                        <BarLoader loading={loading} widthUnit={'px'} heightUnit={'px'} width={823} height={6} color={'#fa0000'}/>
                         {!loading&&post &&
                             <div>
                                <div className="panel">

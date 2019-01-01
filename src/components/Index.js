@@ -6,7 +6,10 @@ import Alert from './common/Alert';
 import {connect} from 'react-redux';
 import {fetchHomeData} from '../actions/postActions';
 import Menu from "./Menu";
+import {BarLoader} from 'react-spinners';
+
 const PostList=lazy(()=>import("./PostList"));
+
 
 class Index extends Component {
     constructor(props){
@@ -79,7 +82,7 @@ class Index extends Component {
                         <div className="header">
                             {catList &&<Menu catList={catList} currentTab={currentFilter.tab} goToTab={this.goToTab}/>}
                         </div>
-                        <Suspense fallback={<div className="text-center">加载中.....</div>}>
+                        <Suspense fallback={<BarLoader widthUnit={'px'} heightUnit={'px'} width={823} height={6} color={'#fa0000'}/>}>
                         <div className="inner no-padding">
                             {pager&&pager.content.length===0 && <div className='row text-center'>没有数据</div>}
                             {pager&&pager.content.length>0 && <PostList postList={pager.content}></PostList>}
