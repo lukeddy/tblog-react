@@ -1,15 +1,17 @@
-import React from "react";
+import React,{lazy,Suspense} from "react";
 import Advertise from "./Advertise";
 import like from '../assets/ico/like.svg'
 import comment from '../assets/ico/comment.svg'
 import collect from '../assets/ico/collect.svg'
 import share from '../assets/ico/share.svg'
-import Comment from "./Comment";
+// import Comment from "./Comment";
 import {Link} from "react-router-dom";
 import {connect} from 'react-redux';
 import {getPost} from '../actions/postActions';
 import {getComments} from '../actions/commentActions';
 import Alert from './common/Alert';
+
+const Comment=lazy(()=>import("./Comment"));
 
 class PostDetail extends React.Component{
 
@@ -127,9 +129,11 @@ class PostDetail extends React.Component{
                                     </div>
                                 </div>
                             </div>
-                               <Comment postId={this.state.postId}
-                                        comments={comments}
-                                        reloadComments={this.reloadComments}/>
+                                <Suspense fallback={<div className="text-center">加载评论中......</div>}>
+                                   <Comment postId={this.state.postId}
+                                            comments={comments}
+                                            reloadComments={this.reloadComments}/>
+                                </Suspense>
                             </div>
                         }
                     </div>

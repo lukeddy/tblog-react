@@ -1,11 +1,12 @@
-import React, {Component} from 'react';
+import React, {Component,lazy,Suspense} from 'react';
 import Advertise from "./Advertise";
 import Pagination from "./common/Pagination";
 import Alert from './common/Alert';
-import PostList from "./PostList";
+// import PostList from "./PostList";
 import {connect} from 'react-redux';
 import {fetchHomeData} from '../actions/postActions';
 import Menu from "./Menu";
+const PostList=lazy(()=>import("./PostList"));
 
 class Index extends Component {
     constructor(props){
@@ -78,11 +79,13 @@ class Index extends Component {
                         <div className="header">
                             {catList &&<Menu catList={catList} currentTab={currentFilter.tab} goToTab={this.goToTab}/>}
                         </div>
+                        <Suspense fallback={<div className="text-center">加载中.....</div>}>
                         <div className="inner no-padding">
                             {pager&&pager.content.length===0 && <div className='row text-center'>没有数据</div>}
                             {pager&&pager.content.length>0 && <PostList postList={pager.content}></PostList>}
                             {pager&&pager.totalPages>0 &&<Pagination totalPages={pager.totalPages} currentPage={pager.number+1} jumpPage={this.goToPage}/> }
                         </div>
+                        </Suspense>
                     </div>
                 </div>
                 <div className="col-md-3">
