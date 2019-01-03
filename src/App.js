@@ -19,7 +19,7 @@ import PostEdit from "./components/admin/PostEdit";
 class App extends Component {
   render() {
     return (
-        <Router>
+        <Router basename={process.env.REACT_APP_CONTEXT_PATH}>
             <div>
                 <Nav></Nav>
                 <Switch>
