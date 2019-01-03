@@ -1,7 +1,7 @@
 {
   "name": "tblog-react",
   "version": "0.1.0",
-  "homepage": "./",
+  "homepage": "http://118.24.127.237/react",
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
