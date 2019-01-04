@@ -2,23 +2,31 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import {createStore,applyMiddleware} from 'redux';
-import {Provider} from 'react-redux';
-import thunk from 'redux-thunk';
-import {composeWithDevTools} from 'redux-devtools-extension';
-import rootReducer from './reducers/rootReducer';
 import axios from 'axios';
+import {Provider} from 'mobx-react';
+import AuthStore from './stores/AuthStore';
+import IndexStore from "./stores/IndexStore";
 
 import * as serviceWorker from './serviceWorker';
+import PostStore from "./stores/PostStore";
+import CommentStore from "./stores/CommentStore";
+import CategoryStore from "./stores/CategoryStore";
+import UploadStore from "./stores/UploadStore";
 
-const store=createStore(
-    rootReducer,
-    composeWithDevTools(applyMiddleware(thunk)));
+
+const stores = {
+    authStore: new AuthStore(),
+    indexStore: new IndexStore(),
+    postStore:new PostStore(),
+    commentStore:new CommentStore(),
+    categoryStore:new CategoryStore(),
+    uploadStore:new UploadStore(),
+}
 
 axios.defaults.baseURL=process.env.REACT_APP_API_URL;
 
 ReactDOM.render(
-    <Provider store={store}>
+    <Provider {...stores}>
       <App />
     </Provider>,
     document.getElementById('root'));

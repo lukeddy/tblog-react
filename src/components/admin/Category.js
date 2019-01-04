@@ -3,9 +3,8 @@ import Pagination from '../common/Pagination';
 import Advertise from "../Advertise";
 import {Link} from "react-router-dom";
 import Alert from '../common/Alert';
-import {connect} from 'react-redux';
-import {fetchCategoryList} from '../../actions/categoryActions';
-import PropTypes from "prop-types";
+import {inject,observer} from 'mobx-react';
+import {STATUS_BEGIN} from "../../stores/Status";
 
 
 class Category extends React.Component{
@@ -13,7 +12,6 @@ class Category extends React.Component{
     constructor(props){
         super(props)
         this.state={
-            loading:false,
             currentPage:1,
             alertData:{},
         }
@@ -27,16 +25,17 @@ class Category extends React.Component{
         this.fetchData();
     }
     fetchData(){
-        this.setState({loading:true});
-        this.props.fetchCategoryList({pageNO:this.state.currentPage}).then((response)=>{
-            this.setState({loading:false});
-            //this.setState({alertData:response.data});
-        }).catch(error=>{
-            console.log(error);
-            const data={status:false,msg:"获取栏目数据失败"}
-            this.setState({loading:false});
-            this.setState({alertData:data});
-        });
+
+        this.props.categoryStore.fetchCategoryList({pageNO:this.state.currentPage});
+        // this.props.fetchCategoryList({pageNO:this.state.currentPage}).then((response)=>{
+        //     this.setState({loading:false});
+        //     //this.setState({alertData:response.data});
+        // }).catch(error=>{
+        //     console.log(error);
+        //     const data={status:false,msg:"获取栏目数据失败"}
+        //     this.setState({loading:false});
+        //     this.setState({alertData:data});
+        // });
     }
 
     goToPage(pageNo){
@@ -47,8 +46,7 @@ class Category extends React.Component{
     }
 
     render(){
-        const {alertData,loading}=this.state;
-        const {pager}=this.props;
+        const {pager,status,alertData}=this.props.categoryStore;
 
         let catItems=null;
         if(pager&&pager.content){
@@ -90,11 +88,11 @@ class Category extends React.Component{
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {loading && <tr><td className="text-center" colSpan="5">数据加载中....</td></tr>}
+                                    {status===STATUS_BEGIN && <tr><td className="text-center" colSpan="5">数据加载中....</td></tr>}
                                     {catItems}
                                 </tbody>
                             </table>
-                            {pager.totalPages &&<Pagination totalPages={pager.totalPages} currentPage={pager.number+1} jumpPage={this.goToPage}/> }
+                            {pager&&pager.totalPages &&<Pagination totalPages={pager.totalPages} currentPage={pager.number+1} jumpPage={this.goToPage}/> }
                         </div>
                     </div>
                 </div>
@@ -103,15 +101,4 @@ class Category extends React.Component{
     }
 }
 
-PropTypes.propTypes={
-    fetchCategoryList: PropTypes.func.isRequired,
-    pager:PropTypes.object.isRequired
-}
-
-function mapStateToProps(state) {
-    return {
-        pager:state.categoryReducer.pager
-    };
-}
-
-export default connect(mapStateToProps,{fetchCategoryList})(Category)
+export default inject("categoryStore")(observer(Category))

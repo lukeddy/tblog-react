@@ -4,8 +4,8 @@ import {Link} from "react-router-dom";
 import Validator from 'validator';
 import InlineError from './common/InlineError';
 import Alert from './common/Alert';
-import {connect} from 'react-redux';
-import {register} from '../actions/authActions';
+import {inject,observer} from 'mobx-react';
+import {STATUS_BEGIN} from '../stores/Status';
 
 class Register extends React.Component{
 
@@ -17,9 +17,7 @@ class Register extends React.Component{
                 password:'',
                 email:'',
             },
-            loading:false,
             errors:{},
-            alertData:{},
         };
 
         this.onChange=this.onChange.bind(this);
@@ -39,18 +37,18 @@ class Register extends React.Component{
         this.setState({ errors });
 
         if (Object.keys(errors).length === 0) {
-            this.setState({loading:true});
-            this.props.register(this.state.data).then((response)=>{
-                this.setState({loading:false});
-                this.setState({alertData:response.data});
-            }).catch(error=>{
-                console.log(error);
-                const data={
-                    status:false,
-                    msg:error.toString()
-                }
-                this.setState({alertData:data});
-            });
+            this.props.authStore.register(this.state.data);
+            // this.props.register(this.state.data).then((response)=>{
+            //     this.setState({loading:false});
+            //     this.setState({alertData:response.data});
+            // }).catch(error=>{
+            //     console.log(error);
+            //     const data={
+            //         status:false,
+            //         msg:error.toString()
+            //     }
+            //     this.setState({alertData:data});
+            // });
         }
     }
 
@@ -66,7 +64,8 @@ class Register extends React.Component{
 
     render(){
 
-        const {data,errors,loading,alertData}=this.state
+        const {data,errors}=this.state
+        const {status,alertData } = this.props.authStore;
 
         return (
             <div className="container main">
@@ -103,7 +102,7 @@ class Register extends React.Component{
                                 </div>
                                 <div className="btn-group btn-group-justified" role="group" aria-label="...">
                                     <div className="btn-group" role="group">
-                                        <button className="btn btn-success" type="submit" disabled={loading}>注册</button>
+                                        <button className="btn btn-success" type="submit" disabled={status===STATUS_BEGIN}>注册</button>
                                     </div>
                                     <div className="btn-group" role="group">
                                         <button className="btn btn-default" type="reset">重置</button>
@@ -122,4 +121,4 @@ class Register extends React.Component{
     }
 }
 
-export default connect(null,{register})(Register)
+export default inject("authStore")(observer(Register))

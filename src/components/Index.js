@@ -1,12 +1,12 @@
-import React, {Component,lazy,Suspense} from 'react';
+import React, {Component, lazy, Suspense} from 'react';
 import Advertise from "./Advertise";
 import Pagination from "./common/Pagination";
 import Alert from './common/Alert';
 // import PostList from "./PostList";
-import {connect} from 'react-redux';
-import {fetchHomeData} from '../actions/postActions';
 import Menu from "./Menu";
 import {BarLoader} from 'react-spinners';
+import {inject, observer} from 'mobx-react';
+import {STATUS_BEGIN} from "../stores/Status";
 
 const PostList=lazy(()=>import("./PostList"));
 
@@ -14,71 +14,35 @@ const PostList=lazy(()=>import("./PostList"));
 class Index extends Component {
     constructor(props){
         super(props)
-
-        this.state={
-            pager:null,
-            catList:[],
-            currentFilter:{
-              pageNO:1,
-              tab:"all"
-            },
-            loading:false,
-
-            alertData:{},
-        }
-
         //一定要写这个binding，不然在调用分页接口时会报goToPage is not a function
         this.loadData=this.loadData.bind(this);
         this.goToPage=this.goToPage.bind(this);
     }
 
     componentDidMount(){
-        this.loadData(this.state.currentFilter.pageNO,this.state.currentFilter.tab);
+        this.loadData(1,'all');
     }
 
     loadData(pageNo,tab){
-        //console.log("loading data: "+pageNo);
-        this.setState({loading:true});
-        this.props.fetchHomeData({pageNO:pageNo,tab:tab}).then((response)=>{
-            this.setState({loading:false});
-            //console.log(response.data.data)
-            if(response.data.status){
-                this.setState({pager:response.data.data.pager});
-                this.setState({catList:response.data.data.catList});
-                this.setState({currentFilter:response.data.data.indexVo});
-            }else{
-                this.setState({alertData:response.data});
-            }
-        }).catch(error=>{
-            console.log(error);
-            this.setState({loading:false});
-            this.setState({alertData:{status:false,msg:"获取帖子数据失败"}});
-        });
+        this.props.indexStore.fetchHomeData({pageNO:pageNo,tab:tab});
     }
     goToPage(pageNo){
-        //console.log("go to page:"+pageNo);
-        this.setState({
-            currentFilter: { ...this.state.currentFilter, pageNo: pageNo }
-        },this.loadData(pageNo,this.state.currentFilter.tab));
+        this.loadData(pageNo,this.props.indexStore.currentFilter.tab)
     }
 
 
     goToTab=(tab)=>{
         console.log('goto tab:',tab)
-        this.setState({
-            currentFilter: { ...this.state.currentFilter, tab: tab }
-        });
-
         this.loadData(1,tab);
     }
 
     render() {
-        const {pager,catList,currentFilter, alertData,loading}=this.state
+        const {pager,catList,currentFilter,status,alertData}=this.props.indexStore;
         return (
             <div className="container main">
                 <Alert alertData={alertData}/>
                 <div className="col-md-9">
-                    <BarLoader loading={loading} widthUnit={'px'} heightUnit={'px'} width={823} height={6} color={'#fa0000'}/>
+                    <BarLoader loading={status===STATUS_BEGIN} widthUnit={'px'} heightUnit={'px'} width={823} height={6} color={'#fa0000'}/>
                     <div className="panel">
                         <div className="header">
                             {catList &&<Menu catList={catList} currentTab={currentFilter.tab} goToTab={this.goToTab}/>}
@@ -100,4 +64,4 @@ class Index extends Component {
     }
 }
 
-export default connect(null,{fetchHomeData})(Index);
+export default inject("indexStore")(observer(Index));

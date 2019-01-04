@@ -6,65 +6,39 @@ import collect from '../assets/ico/collect.svg'
 import share from '../assets/ico/share.svg'
 // import Comment from "./Comment";
 import {Link} from "react-router-dom";
-import {connect} from 'react-redux';
-import {getPost} from '../actions/postActions';
-import {getComments} from '../actions/commentActions';
 import Alert from './common/Alert';
 import {BarLoader} from 'react-spinners';
+import {inject,observer} from 'mobx-react';
+import {STATUS_BEGIN,STATUS_SUCCESS} from '../stores/Status';
 
 const Comment=lazy(()=>import("./Comment"));
 
 class PostDetail extends React.Component{
 
     state={
-        postId:null,
-        post:null,
-        comments:[],
-        loading:false,
-        alertData:{},
+        postId:'',
     }
 
     componentDidMount(){
         const postId=this.props.match.params.id;
-        this.setState({postId:postId})
-        this.setState({loading:true});
-        this.props.getPost(postId).then((response)=>{
-            this.setState({loading:false});
-            //console.log('get post:',response.data.data)
-            if(response.data.status){
-                this.setState({post:response.data.data})
-                this.loadComments(postId)
-            }else{
-                this.setState({alertData:response.data});
-            }
-        }).catch(error=>{
-            console.log(error);
-            this.setState({loading:false});
-            this.setState({alertData:{status:false,msg:"获取帖子信息失败"}});
+        this.setState({postId:postId});
+        this.props.postStore.fetchPostDetail(postId).then(()=>{
+            this.loadComments(postId);
         });
     }
 
     loadComments(postId){
-        this.props.getComments(postId).then((response)=>{
-            //console.log('get comments:',response.data.data)
-            if(response.data.status){
-                this.setState({comments:response.data.data})
-            }else{
-                this.setState({alertData:response.data});
-            }
-        }).catch(error=>{
-            console.log(error);
-            this.setState({alertData:{status:false,msg:"获取帖子评论失败"}});
-        });
+        console.log('load comments:',postId)
+        this.props.commentStore.fetchComments(postId);
     }
 
     reloadComments=()=>{
-        console.log('reload comments',this.state.postId)
         this.loadComments(this.state.postId)
     }
 
     render(){
-        const {post,loading,alertData,comments}=this.state
+        const {post,status,alertData}=this.props.postStore;
+        const {comments}=this.props.commentStore;
 
         return(
             <div className="container main">
@@ -76,8 +50,8 @@ class PostDetail extends React.Component{
                             <li>Java<span className="divider"></span></li>
                         </ul>
                         <Alert alertData={alertData}/>
-                        <BarLoader loading={loading} widthUnit={'px'} heightUnit={'px'} width={823} height={6} color={'#fa0000'}/>
-                        {!loading&&post &&
+                        <BarLoader loading={status===STATUS_BEGIN} widthUnit={'px'} heightUnit={'px'} width={823} height={6} color={'#fa0000'}/>
+                        {status===STATUS_SUCCESS&&post &&
                             <div>
                                <div className="panel">
                                 <div className="header topic-header">
@@ -147,4 +121,4 @@ class PostDetail extends React.Component{
     }
 }
 
-export default connect(null,{getPost,getComments})(PostDetail)
+export default inject("postStore","commentStore")(observer(PostDetail))

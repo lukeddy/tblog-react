@@ -4,9 +4,8 @@ import {Link} from "react-router-dom";
 import Alert from "../common/Alert";
 import InlineError from "../common/InlineError";
 import Validator from 'validator';
-import {connect} from 'react-redux';
-import {getCategory,updateCategory} from '../../actions/categoryActions';
-import PropTypes from 'prop-types';
+import {inject,observer} from 'mobx-react';
+import {STATUS_BEGIN} from "../../stores/Status";
 
 class CategoryEdit extends React.Component{
     constructor(props){
@@ -18,9 +17,7 @@ class CategoryEdit extends React.Component{
                 catDir:"",
                 catDesc:"",
             },
-            loading:false,
             errors:{},
-            alertData:{},
         }
 
         this.onChange=this.onChange.bind(this);
@@ -33,14 +30,17 @@ class CategoryEdit extends React.Component{
     }
 
     initData(catId){
-        this.props.getCategory(catId).then((response)=>{
-            if(response.data.status){
-                this.setState({category:response.data.data});
-            }
-        }).catch(error=>{
-            console.log(error);
-            this.setState({alertData:{status:false,msg:"获取栏目信息失败"}});
+        this.props.categoryStore.getCategory(catId).then(()=>{
+            this.setState({category:this.props.categoryStore.category})
         });
+        // this.props.getCategory(catId).then((response)=>{
+        //     if(response.data.status){
+        //         this.setState({category:response.data.data});
+        //     }
+        // }).catch(error=>{
+        //     console.log(error);
+        //     this.setState({alertData:{status:false,msg:"获取栏目信息失败"}});
+        // });
     }
 
     onChange(e){
@@ -56,15 +56,16 @@ class CategoryEdit extends React.Component{
         this.setState({ errors });
 
         if (Object.keys(errors).length === 0) {
-            this.setState({loading:true});
-            this.props.updateCategory(catId,category).then((response)=>{
-                this.setState({loading:false});
-                this.setState({alertData:response.data});
-            }).catch(error=>{
-                console.log(error);
-                this.setState({alertData:{status:false,msg:error.toString()}});
-                this.setState({loading:false});
-            });
+            this.props.categoryStore.updateCategory(catId,category);
+            // this.setState({loading:true});
+            // this.props.updateCategory(catId,category).then((response)=>{
+            //     this.setState({loading:false});
+            //     this.setState({alertData:response.data});
+            // }).catch(error=>{
+            //     console.log(error);
+            //     this.setState({alertData:{status:false,msg:error.toString()}});
+            //     this.setState({loading:false});
+            // });
         }
     }
     validate(data){
@@ -77,7 +78,8 @@ class CategoryEdit extends React.Component{
 
     render(){
 
-        const {category,errors,alertData,loading}=this.state;
+        const {category,errors}=this.state;
+        const {alertData,status}=this.props.categoryStore;
 
         return(
             <div className="container main">
@@ -117,7 +119,7 @@ class CategoryEdit extends React.Component{
                                     </div>
                                 </div>
                                 <div className="form-group text-center">
-                                    <button className="btn btn-success" type="submit" disabled={loading}>修改</button>
+                                    <button className="btn btn-success" type="submit" disabled={status===STATUS_BEGIN}>修改</button>
                                     <button className="btn btn-default" type="reset">清空</button>
                                 </div>
                             </form>
@@ -129,9 +131,4 @@ class CategoryEdit extends React.Component{
     }
 }
 
-CategoryEdit.propTypes={
-    getCategory:PropTypes.func.isRequired,
-    updateCategory:PropTypes.func.isRequired
-}
-
-export default connect(null,{getCategory,updateCategory})(CategoryEdit)
+export default inject("categoryStore")(observer(CategoryEdit))

@@ -1,16 +1,14 @@
 import React from "react";
 import {Modal} from 'react-bootstrap';
 import PropTypes from "prop-types";
-import {connect} from 'react-redux';
-import {banBadComment} from '../actions/commentActions';
 import Alert from './common/Alert';
+import {inject,observer} from 'mobx-react';
 
 class CommentBanDialog extends React.Component{
 
     state = {
         reason:'1',
         memo:'',
-        alertData:{},
     }
 
     showDialog=()=> {
@@ -34,17 +32,19 @@ class CommentBanDialog extends React.Component{
         }
 
         //console.log(this.props.comment.id, data)
-        this.props.banBadComment(this.props.comment.id,data).then((response)=>{
-            this.setState({alertData:response.data});
-        }).catch(error=>{
-            console.log(error);
-            this.setState({alertData:{status:false,msg:"举报评论失败:"+error.toString()}});
-        });
+        this.props.commentStore.banBadComment(this.props.comment.id,data);
+        // this.props.banBadComment(this.props.comment.id,data).then((response)=>{
+        //     this.setState({alertData:response.data});
+        // }).catch(error=>{
+        //     console.log(error);
+        //     this.setState({alertData:{status:false,msg:"举报评论失败:"+error.toString()}});
+        // });
     }
 
 
     render(){
-        const {reason,memo,alertData}=this.state
+        const {reason,memo}=this.state;
+        const {alertData}=this.props.commentStore;
 
         return(
             <div>
@@ -94,4 +94,4 @@ PropTypes.propTypes={
     comment:PropTypes.object.isRequired,
 }
 
-export default connect(null,{banBadComment})(CommentBanDialog)
+export default inject("commentStore")(observer(CommentBanDialog))

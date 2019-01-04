@@ -4,13 +4,9 @@ import Alert from '../common/Alert';
 import InlineError from "../common/InlineError";
 import {Link} from "react-router-dom";
 import Dropzone from 'react-dropzone';
-import {connect} from 'react-redux';
-import {fetchAllCategory} from '../../actions/categoryActions';
-import {uploadFile} from '../../actions/uploadActions';
-import {getUserInfo} from '../../actions/userActions';
-import {getPost,updatePost} from '../../actions/postActions';
 import YTEditor from '../editor/YTEditor';
-import PropTypes from "prop-types";
+import {inject, observer} from 'mobx-react';
+import {STATUS_BEGIN} from "../../stores/Status";
 
 class PostEdit extends React.Component{
 
@@ -32,10 +28,7 @@ class PostEdit extends React.Component{
                 top:false,
                 good:false,
             },
-            allCategory:[],
-            loading:false,
             errors:{},
-            alertData:{},
         }
         this.onChange=this.onChange.bind(this);
         this.onSubmit=this.onSubmit.bind(this);
@@ -44,9 +37,11 @@ class PostEdit extends React.Component{
 
     componentDidMount(){
         const postId=this.props.match.params.id;
-        this.setState({postId:postId});
 
-        this.props.getPost(postId).then((response)=>{
+        this.setState({postId:postId});
+        this.setState({data: { ...this.state.data, authorId: this.props.authStore.userInfo.uid }});
+
+        this.props.postStore.fetchPostDetail(postId).then((response)=>{
             if(response.data.status){
                 console.log('post edit:',response.data.data)
                 this.setState({
@@ -90,30 +85,13 @@ class PostEdit extends React.Component{
                     data: { ...this.state.data, thumbBG:process.env.REACT_APP_BASE_URL+response.data.data.thumbURL}
                 });
             }
-        }).catch(error=>{
-            console.log(error);
-            this.setState({alertData:{status:false,msg:"获取帖子信息失败"}});
-        });
-
-        this.props.fetchAllCategory().then((response)=>{
+        })
+        this.props.categoryStore.fetchAllCategory().then((response)=>{
             if(response.data.status){
                 this.setState({allCategory:response.data.data},console.log('all cat:',this.state.allCategory));
             }
-        }).catch(error=>{
-            console.log(error);
-            this.setState({alertData:{status:false,msg:"获取栏目信息失败"}});
-        });
+        })
 
-        this.props.getUserInfo().then((response)=>{
-            if(response.data.status){
-                console.log('login user:',response.data.data);
-                this.setState({data: { ...this.state.data, authorId: response.data.data.uid }});
-
-            }
-        }).catch(error=>{
-            console.log(error);
-            this.setState({alertData:{status:false,msg:"获取用户信息失败"}});
-        });
     }
 
     onChange(e){
@@ -134,16 +112,16 @@ class PostEdit extends React.Component{
 
         console.log(this.state.data)
         if (Object.keys(errors).length === 0) {
-            this.setState({loading:true});
-            this.props.updatePost(this.state.postId,this.state.data).then((response)=>{
-                this.setState({loading:false});
-                this.setState({alertData:response.data});
-            }).catch(error=>{
-                console.log(error);
-                const data={status:false,msg:"更新帖子失败"}
-                this.setState({alertData:data});
-                this.setState({loading:false});
-            });
+            this.props.postStore.updatePost(this.state.postId,this.state.data);
+            // this.props.updatePost(this.state.postId,this.state.data).then((response)=>{
+            //     this.setState({loading:false});
+            //     this.setState({alertData:response.data});
+            // }).catch(error=>{
+            //     console.log(error);
+            //     const data={status:false,msg:"更新帖子失败"}
+            //     this.setState({alertData:data});
+            //     this.setState({loading:false});
+            // });
         }
     }
 
@@ -162,7 +140,7 @@ class PostEdit extends React.Component{
 
         const data = new FormData();
         data.append('file', acceptedFile[0]);
-        this.props.uploadFile(data).then((response)=>{
+        this.props.uploadStore.uploadFile(data).then((response)=>{
             console.log(response)
             if(response.data.status){
                 this.setState({
@@ -172,10 +150,21 @@ class PostEdit extends React.Component{
                     data: { ...this.state.data, thumbBG:process.env.REACT_APP_BASE_URL+response.data.data}
                 });
             }
-        }).catch(error=>{
-            console.log(error);
-            this.setState({alertData:{status:false,msg:error.toString()}});
-        });
+        })
+        // this.props.uploadFile(data).then((response)=>{
+        //     console.log(response)
+        //     if(response.data.status){
+        //         this.setState({
+        //             data: { ...this.state.data, thumbURL:response.data.data}
+        //         });
+        //         this.setState({
+        //             data: { ...this.state.data, thumbBG:process.env.REACT_APP_BASE_URL+response.data.data}
+        //         });
+        //     }
+        // }).catch(error=>{
+        //     console.log(error);
+        //     this.setState({alertData:{status:false,msg:error.toString()}});
+        // });
     }
     updateMarkdown(markdown,html){
         // console.log('md:',markdown)
@@ -189,8 +178,10 @@ class PostEdit extends React.Component{
     }
 
     render(){
-        const {data,allCategory,alertData,errors,loading}=this.state
-        const {auth}=this.props
+        const {data,errors}=this.state
+        const {allCategory}=this.props.categoryStore;
+        const {status,alertData}=this.props.postStore;
+        const {token}=this.props.authStore;
 
         return(
             <div className="container main">
@@ -243,7 +234,7 @@ class PostEdit extends React.Component{
                                 </div>
                                 <div className="form-group">
                                     <label>正文,提示：图片可以直接粘贴或者拖拽自动上传</label>
-                                    <YTEditor updateMarkdown={this.updateMarkdown} authToken={auth.token} defaultValue={data.contentMD}/>
+                                    <YTEditor updateMarkdown={this.updateMarkdown} authToken={token} defaultValue={data.contentMD}/>
                                     {errors.contentMD && <InlineError text={errors.contentMD} />}
                                 </div>
                                 <div className="checkbox">
@@ -259,7 +250,7 @@ class PostEdit extends React.Component{
                                 </div>
 
                                 <div className="form-group text-center">
-                                    <button className="btn btn-success" type="submit" disabled={loading}>更新</button>
+                                    <button className="btn btn-success" type="submit" disabled={status===STATUS_BEGIN}>更新</button>
                                     <button className="btn btn-default" type="reset">清空</button>
                                 </div>
                             </form>
@@ -287,15 +278,5 @@ class PostEdit extends React.Component{
     }
 }
 
-PropTypes.propTypes={
-    auth:PropTypes.object.isRequired
-}
 
-
-function mapStateToProps(state) {
-    return {
-        auth:state.authReducer
-    };
-}
-
-export default connect(mapStateToProps,{fetchAllCategory,uploadFile,getUserInfo,getPost,updatePost})(PostEdit)
+export default inject("authStore","categoryStore","postStore","uploadStore")(observer(PostEdit))

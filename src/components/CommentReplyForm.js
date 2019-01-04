@@ -1,16 +1,13 @@
 import React from "react";
-import Alert from './common/Alert';
 import SMEditor from "./editor/SMEditor";
 import PropTypes from "prop-types";
-import {connect} from 'react-redux';
-import {replyComment} from '../actions/commentActions';
+import {inject,observer} from 'mobx-react';
 
 class CommentReplyForm extends React.Component{
 
     state={
         contentMD:"",
         contentHTML:"",
-        alertData:{}
     }
 
     onSubmit=(e)=>{
@@ -21,14 +18,8 @@ class CommentReplyForm extends React.Component{
             replyHtml:this.state.contentHTML
         }
         console.log('reply aaa:',data)
-        this.props.replyComment(data).then((response)=>{
-            this.setState({alertData:response.data});
-            if(response.data.status){
-                this.props.reloadComments();
-            }
-        }).catch(error=>{
-            console.log(error);
-            this.setState({alertData:{status:false,msg:"回复评论失败:"+error.toString()}});
+        this.props.commentStore.replyComment(data).then(()=>{
+            this.props.reloadComments();
         });
     }
 
@@ -38,7 +29,6 @@ class CommentReplyForm extends React.Component{
     }
 
     render(){
-         const {alertData}=this.state
          const {comment}=this.props
          const toolbar=[
             'bold',
@@ -75,7 +65,6 @@ class CommentReplyForm extends React.Component{
 
         return(
             <div className="comment-form">
-                <Alert alertData={alertData} />
                 <form onSubmit={this.onSubmit}>
                     <div className="form-group">
                         <p className="text-right"><strong>回复@{comment.author.username}</strong></p>
@@ -95,4 +84,4 @@ PropTypes.propTypes={
     reloadComments:PropTypes.func.isRequired,
 }
 
-export default connect(null,{replyComment})(CommentReplyForm)
+export default inject("commentStore")(observer(CommentReplyForm))

@@ -2,10 +2,10 @@ import React from 'react'
 import Advertise from "./Advertise";
 import {Link} from "react-router-dom";
 import InlineError from "./common/InlineError";
-import {connect} from 'react-redux';
-import {login} from '../actions/authActions';
 import PropTypes from 'prop-types';
 import Alert from './common/Alert';
+import {inject, observer} from "mobx-react";
+import {STATUS_BEGIN} from '../stores/Status';
 
 class Login extends React.Component{
     constructor(props){
@@ -15,9 +15,7 @@ class Login extends React.Component{
                 username: "",
                 password: ""
             },
-            loading:false,
             errors: {},
-            alertData:{},
         }
 
         this.onChange=this.onChange.bind(this);
@@ -36,20 +34,11 @@ class Login extends React.Component{
         this.setState({ errors });
 
         if (Object.keys(errors).length === 0) {
-            this.setState({loading:true});
-            this.props.login(this.state.data).then((response)=>{
-                this.setState({loading:false});
-                this.setState({alertData:response.data});
-                if(response.data.status){
+            this.props.authStore.login(this.state.data).then(()=>{
+                const {isAuthenticated} = this.props.authStore;
+                if(isAuthenticated){
                     this.props.history.push("/home");
                 }
-            }).catch(error=>{
-                console.log(error);
-                const data={
-                    status:false,
-                    msg:error.toString()
-                }
-                this.setState({alertData:data});
             });
         }
     }
@@ -62,7 +51,8 @@ class Login extends React.Component{
     }
 
     render(){
-        const { data, errors,loading,alertData } = this.state;
+        const { data, errors } = this.state;
+        const {status,alertData } = this.props.authStore;
 
         return (
             <div className="container main">
@@ -92,7 +82,7 @@ class Login extends React.Component{
                                 </div>
                                 <div className="btn-group btn-group-justified" role="group" aria-label="...">
                                     <div className="btn-group" role="group">
-                                        <button className="btn btn-success" type="submit" disabled={loading}>登录</button>
+                                        <button className="btn btn-success" type="submit" disabled={status===STATUS_BEGIN}>登录</button>
                                     </div>
                                     <div className="btn-group" role="group">
                                         <button className="btn btn-default" type="reset">重置</button>
@@ -114,8 +104,7 @@ class Login extends React.Component{
 PropTypes.propTypes={
     history: PropTypes.shape({
         push: PropTypes.func.isRequired
-    }).isRequired,
-    login: PropTypes.func.isRequired
+    }).isRequired
 }
 
-export default connect(null,{login})(Login)
+export default inject("authStore")(observer(Login));

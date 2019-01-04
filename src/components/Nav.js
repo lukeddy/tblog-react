@@ -1,8 +1,6 @@
 import React, {Component} from 'react'
 import {Link} from "react-router-dom";
-import {connect} from 'react-redux';
-import {logout} from '../actions/authActions';
-import PropTypes from 'prop-types';
+import {inject,observer} from 'mobx-react';
 
 class Nav extends Component{
 
@@ -12,7 +10,7 @@ class Nav extends Component{
     }
 
     render(){
-        const {isAuthenticated}=this.props.auth;
+        const {isAuthenticated} = this.props.authStore;
 
         return (
             <div className="navbar navbar-inverse navbar-fixed-top">
@@ -48,15 +46,4 @@ class Nav extends Component{
     }
 }
 
-Nav.propTypes = {
-    auth: PropTypes.object.isRequired,
-    logout: PropTypes.func.isRequired
-}
-
-function mapStateToProps(state) {
-    return {
-        auth: state.authReducer
-    };
-}
-
-export default connect(mapStateToProps,{logout})(Nav)
+export default inject("authStore")(observer(Nav));

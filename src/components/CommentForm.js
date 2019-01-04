@@ -1,15 +1,12 @@
 import React from "react";
 import SMEditor from './editor/SMEditor';
 import PropTypes from "prop-types";
-import {connect} from 'react-redux';
-import {addComment} from '../actions/commentActions';
-import Alert from "./common/Alert";
+import  {inject,observer} from 'mobx-react';
 
 class CommentForm extends React.Component{
     state={
         contentMD:"",
         contentHTML:"",
-        alertData:{}
     }
     updateMarkdown=(markdown,html)=>{
         // console.log('md:',markdown)
@@ -26,20 +23,22 @@ class CommentForm extends React.Component{
             itemId: this.props.postId,
         }
         console.log('add comment up',data)
-        this.props.addComment(data).then((response)=>{
-            if(response.data.status){
-                this.props.reloadComments();
-            }
-            this.setState({alertData:response.data});
-        }).catch(error=>{
-            console.log(error);
-            this.setState({alertData:{status:false,msg:"添加评论失败:"+error.toString()}});
+        this.props.commentStore.addComment(data).then(()=>{
+            this.props.reloadComments();
         });
+        // this.props.addComment(data).then((response)=>{
+        //     if(response.data.status){
+        //         this.props.reloadComments();
+        //     }
+        //     this.setState({alertData:response.data});
+        // }).catch(error=>{
+        //     console.log(error);
+        //     this.setState({alertData:{status:false,msg:"添加评论失败:"+error.toString()}});
+        // });
 
     }
 
     render(){
-        const {alertData}=this.state
         const toolbar=[
             'bold',
             'italic',
@@ -75,7 +74,6 @@ class CommentForm extends React.Component{
 
         return(
             <div id="comment-form" className="row comment-form">
-                <Alert alertData={alertData}/>
                 <form onSubmit={this.onSubmit}>
                     <fieldset>
                         <div className="form-group">
@@ -99,4 +97,4 @@ PropTypes.propTypes={
     reloadComments:PropTypes.func.isRequired,
 }
 
-export default connect(null,{addComment})(CommentForm)
+export default inject("commentStore")(observer(CommentForm))

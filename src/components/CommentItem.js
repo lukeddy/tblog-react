@@ -1,44 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import {deleteComment,thumbsupComment,banBadComment} from '../actions/commentActions';
-import Alert from './common/Alert';
 import CommentReply from './CommentReply';
 import CommentReplyForm from "./CommentReplyForm";
 import CommentBanDialog from './CommentBanDialog';
+import {inject,observer} from 'mobx-react';
+
 
 class CommentItem extends React.Component{
 
     state={
         currentReplyForm:null,
         dialogShow:false,
-        alertData:{},
     }
 
     thumbsUpClicked=(commentId)=>{
         console.log('thumbs up',commentId)
-        this.props.thumbsupComment(commentId).then((response)=>{
-            if(response.data.status){
-                this.props.reloadComments();
-            }else{
-                this.setState({alertData:response.data});
-            }
-        }).catch(error=>{
-            console.log(error);
-            this.setState({alertData:{status:false,msg:"点赞评论失败:"+error.toString()}});
+        this.props.commentStore.thumbsupComment(commentId).then(()=>{
+            this.props.reloadComments();
         });
     }
     deleteClicked=(commentId)=>{
         console.log('delete',commentId)
-        this.props.deleteComment(commentId).then((response)=>{
-            if(response.data.status){
-                this.props.reloadComments();
-            }else{
-                this.setState({alertData:response.data});
-            }
-        }).catch(error=>{
-            console.log(error);
-            this.setState({alertData:{status:false,msg:"删除评论失败:"+error.toString()}});
+        this.props.commentStore.deleteComment(commentId).then(()=>{
+            this.props.reloadComments();
         });
     }
     replyClicked=(commentId)=>{
@@ -56,8 +40,10 @@ class CommentItem extends React.Component{
     }
 
     render(){
-        const {alertData,currentReplyForm,dialogShow}=this.state
-        const {comment,auth}=this.props
+        const {currentReplyForm,dialogShow}=this.state
+        const {comment}=this.props
+        const {isAuthenticated}=this.props.authStore;
+
         return(
             <div className="comment" id="5ba4accfbf578d447ea53384">
                 <a className="avatar" href="/test" target="_blank">
@@ -76,12 +62,12 @@ class CommentItem extends React.Component{
                         <span className="op-icon like" onClick={this.thumbsUpClicked.bind(this,comment.id)}>
                             <i className="fa fa-thumbs-up"></i> <span>{comment.thumbsUPCount}</span>赞
                         </span>
-                        {auth.isAuthenticated &&
+                        {isAuthenticated &&
                             <span className="op-icon reply btn-reply-to" onClick={this.replyClicked.bind(this,comment.id)}>
                                 <i className="fa fa-comments"></i> 回复
                             </span>
                         }
-                        {auth.isAuthenticated &&
+                        {isAuthenticated &&
                             <span className="op-icon remove" onClick={this.deleteClicked.bind(this, comment.id)}>
                                 <i className="fa fa-trash"></i> 删除
                             </span>
@@ -98,7 +84,6 @@ class CommentItem extends React.Component{
                         </div>
                     }
                 </div>
-                <Alert alertData={alertData}/>
 
                 <CommentBanDialog comment={comment}
                                   show={dialogShow}
@@ -113,10 +98,4 @@ PropTypes.propTypes={
     reloadComments:PropTypes.func.isRequired,
 }
 
-function mapStateToProps(state) {
-    return {
-        auth:state.authReducer
-    };
-}
-
-export default connect(mapStateToProps,{deleteComment,thumbsupComment,banBadComment})(CommentItem)
+export default inject("authStore","commentStore")(observer(CommentItem))

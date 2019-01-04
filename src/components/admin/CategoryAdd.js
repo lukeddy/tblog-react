@@ -4,9 +4,8 @@ import {Link} from "react-router-dom";
 import Alert from "../common/Alert";
 import InlineError from "../common/InlineError";
 import Validator from 'validator';
-import {connect} from 'react-redux';
-import {createCategory} from '../../actions/categoryActions';
-import PropTypes from 'prop-types';
+import {inject,observer} from 'mobx-react';
+import {STATUS_BEGIN} from '../../stores/Status';
 
 class CategoryAdd extends React.Component{
     constructor(props){
@@ -17,9 +16,7 @@ class CategoryAdd extends React.Component{
                 catDir:"",
                 catDesc:"",
             },
-            loading:false,
             errors:{},
-            alertData:{},
         }
         this.onChange=this.onChange.bind(this);
         this.onSubmit=this.onSubmit.bind(this);
@@ -36,17 +33,19 @@ class CategoryAdd extends React.Component{
         this.setState({ errors });
 
         if (Object.keys(errors).length === 0) {
-            console.log(this.state.data)
-            this.setState({loading:true});
-            this.props.createCategory(this.state.data).then((response)=>{
-                this.setState({loading:false});
-                this.setState({alertData:response.data});
-            }).catch(error=>{
-                console.log(error);
-                const data={status:false,msg:"创建栏目失败"}
-                this.setState({alertData:data});
-                this.setState({loading:false});
-            });
+            this.props.categoryStore.createCategory(this.state.data);
+            // console.log(this.state.data)
+            // this.setState({loading:true});
+            // this.props.createCategory(this.state.data).then((response)=>{
+            //     this.setState({loading:false});
+            //     this.setState({alertData:response.data});
+            // }).catch(error=>{
+            //     console.log(error);
+            //     const data={status:false,msg:"创建栏目失败"}
+            //     this.setState({alertData:data});
+            //     this.setState({loading:false});
+            // });
+
         }
     }
 
@@ -60,7 +59,8 @@ class CategoryAdd extends React.Component{
 
     render(){
 
-        const {data,errors,alertData,loading}=this.state;
+        const {data,errors}=this.state;
+        const {status,alertData}=this.props.categoryStore;
 
         return(
             <div className="container main">
@@ -100,7 +100,7 @@ class CategoryAdd extends React.Component{
                                     </div>
                                 </div>
                                 <div className="form-group text-center">
-                                    <button className="btn btn-success" type="submit" disabled={loading}>新建</button>
+                                    <button className="btn btn-success" type="submit" disabled={status===STATUS_BEGIN}>新建</button>
                                     <button className="btn btn-default" type="reset">清空</button>
                                 </div>
                             </form>
@@ -112,8 +112,4 @@ class CategoryAdd extends React.Component{
     }
 }
 
-CategoryAdd.propTypes={
-    createCategory:PropTypes.func.isRequired
-}
-
-export default connect(null,{createCategory})(CategoryAdd)
+export default inject("categoryStore")(observer(CategoryAdd))

@@ -2,18 +2,15 @@ import React from 'react';
 import Pagination from "../common/Pagination";
 import Advertise from "../Advertise";
 import {Link} from "react-router-dom";
-import {connect} from 'react-redux';
-import {fetchPostList,deletePost} from '../../actions/postActions';
 import Alert from '../common/Alert';
+import {inject,observer} from 'mobx-react';
+import {STATUS_BEGIN} from "../../stores/Status";
 
 class Post extends React.Component{
     constructor(props){
         super(props)
         this.state={
-            pager:{},
-            loading:false,
             currentPage:1,
-            alertData:{},
         }
         this.loadData=this.loadData.bind(this);
         this.goToPage=this.goToPage.bind(this);
@@ -24,18 +21,18 @@ class Post extends React.Component{
     }
 
     loadData(pageNo){
-        this.setState({loading:true});
-        this.props.fetchPostList({pageNO:pageNo}).then((response)=>{
-            this.setState({loading:false});
-            //this.setState({alertData:response.data});
-            if(response.data.status){
-                this.setState({pager:response.data.data});
-            }
-        }).catch(error=>{
-            console.log(error);
-            this.setState({loading:false});
-            this.setState({alertData:{status:false,msg:"获取帖子数据失败"}});
-        });
+        this.props.postStore.fetchPostList({pageNO:pageNo});
+        // this.props.fetchPostList({pageNO:pageNo}).then((response)=>{
+        //     this.setState({loading:false});
+        //     //this.setState({alertData:response.data});
+        //     if(response.data.status){
+        //         this.setState({pager:response.data.data});
+        //     }
+        // }).catch(error=>{
+        //     console.log(error);
+        //     this.setState({loading:false});
+        //     this.setState({alertData:{status:false,msg:"获取帖子数据失败"}});
+        // });
     }
     goToPage(pageNo){
         console.log("go to page:"+pageNo);
@@ -43,21 +40,22 @@ class Post extends React.Component{
     }
 
     handleDelete=(postId)=>{
-        this.props.deletePost(postId).then((response)=>{
-            if(response.data.status){
-                console.log('post delete:',response.data.data)
-                this.setState({alertData:response.data});
-                this.loadData(this.state.currentPage)
-            }
-        }).catch(error=>{
-            console.log(error);
-            this.setState({alertData:{status:false,msg:"删除帖子信息失败"}});
-        });
+        this.props.postStore.deletePost(postId);
+        // this.props.deletePost(postId).then((response)=>{
+        //     if(response.data.status){
+        //         console.log('post delete:',response.data.data)
+        //         this.setState({alertData:response.data});
+        //         this.loadData(this.state.currentPage)
+        //     }
+        // }).catch(error=>{
+        //     console.log(error);
+        //     this.setState({alertData:{status:false,msg:"删除帖子信息失败"}});
+        // });
     }
 
     render(){
 
-        const {pager,alertData,loading}=this.state;
+        const {pager,alertData,status}=this.props.postStore;
 
         let postItems=null;
         if(pager&&pager.totalPages>0){
@@ -104,11 +102,11 @@ class Post extends React.Component{
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {loading && <tr><td className="text-center" colSpan="5">数据加载中....</td></tr>}
+                                    {status===STATUS_BEGIN && <tr><td className="text-center" colSpan="5">数据加载中....</td></tr>}
                                     {postItems}
                                 </tbody>
                             </table>
-                            {pager.totalPages>0 &&<Pagination totalPages={pager.totalPages} currentPage={pager.number+1} jumpPage={this.goToPage}/> }
+                            {pager&&pager.totalPages>0 &&<Pagination totalPages={pager.totalPages} currentPage={pager.number+1} jumpPage={this.goToPage}/> }
                         </div>
                     </div>
                 </div>
@@ -118,4 +116,4 @@ class Post extends React.Component{
 }
 
 
-export default connect(null,{fetchPostList,deletePost})(Post)
+export default inject("postStore")(observer(Post))

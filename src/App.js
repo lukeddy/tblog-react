@@ -24,7 +24,6 @@ class App extends Component {
                 <Nav></Nav>
                 <Switch>
                     <Route exact path="/" component={Index}/>
-                    {/*<Redirect from="/" to="/home"></Redirect>*/}
                     <Route path="/home" component={Index}/>
                     <Route path="/about" component={About}/>
                     <Route path="/login" component={Login}/>
