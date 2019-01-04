@@ -2,7 +2,6 @@ import React from 'react'
 import Advertise from "./Advertise";
 import {Link} from "react-router-dom";
 import InlineError from "./common/InlineError";
-import PropTypes from 'prop-types';
 import Alert from './common/Alert';
 import {inject, observer} from "mobx-react";
 import {STATUS_BEGIN} from '../stores/Status';
@@ -99,12 +98,6 @@ class Login extends React.Component{
             </div>
         );
     }
-}
-
-PropTypes.propTypes={
-    history: PropTypes.shape({
-        push: PropTypes.func.isRequired
-    }).isRequired
 }
 
 export default inject("authStore")(observer(Login));

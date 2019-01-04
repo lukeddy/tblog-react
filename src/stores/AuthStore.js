@@ -32,7 +32,7 @@ export default class AuthStore {
           } catch (error) {
               runInAction(() => {
                   this.status = STATUS_ERROR;
-                  this.alertData={status:false,msg:'登录时出错'};
+                  this.alertData={status:false,msg:'服务端出错，请稍后再试'};
               });
               reject(error);
           }
@@ -69,6 +69,18 @@ export default class AuthStore {
           }
       });
   }
+
+    logout = ()=>{
+        this.status=STATUS_BEGIN;
+        return new Promise(async (resolve) => {
+            localStorage.removeItem("tblogToken");
+            setAuthorizationHeader();
+            this.isAuthenticated=false;
+            this.token=null;
+            this.status=STATUS_SUCCESS;
+            resolve();
+        });
+    }
 
 
     getUserInfo = ()=>{

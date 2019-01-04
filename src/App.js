@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import Index from './components/Index';
 import About from './components/About';
 import Nav from './components/Nav'
@@ -19,7 +19,7 @@ import PostEdit from "./components/admin/PostEdit";
 class App extends Component {
   render() {
     return (
-        <Router basename={process.env.REACT_APP_CONTEXT_PATH}>
+        <BrowserRouter basename={process.env.REACT_APP_CONTEXT_PATH}>
             <div>
                 <Nav></Nav>
                 <Switch>
@@ -39,7 +39,7 @@ class App extends Component {
                 </Switch>
                 <Footer></Footer>
             </div>
-        </Router>
+        </BrowserRouter>
     );
   }
 }
