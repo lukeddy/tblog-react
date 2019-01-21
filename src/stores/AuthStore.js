@@ -22,8 +22,9 @@ export default class AuthStore {
               if(response.data.status){
                   this.status=STATUS_SUCCESS;
                   //console.log(response.data.data);
-                  this.setToken(response.data.data)
-                  this.getUserInfo();
+                  const {token,userInfo}=response.data.data;
+                  this.setToken(token)
+                  this.userInfo=userInfo
                   resolve(response)
               }else{
                   this.status =STATUS_ERROR;
