@@ -7,7 +7,6 @@ import Dropzone from 'react-dropzone';
 import {connect} from 'react-redux';
 import {fetchAllCategory} from '../../actions/categoryActions';
 import {uploadFile} from '../../actions/uploadActions';
-import {getUserInfo} from '../../actions/userActions';
 import {createPost} from '../../actions/postActions';
 import YTEditor from '../editor/YTEditor';
 import PropTypes from "prop-types";
@@ -18,7 +17,7 @@ class PostAdd extends React.Component{
         super(props);
         this.state={
             data:{
-                authorId:null,
+                authorId:this.props.auth.userInfo.uid,
                 catId:"",
                 title:"",
                 desc:"",
@@ -42,6 +41,7 @@ class PostAdd extends React.Component{
     }
 
     componentDidMount(){
+        console.log('auth:',this.props.auth.userInfo)
         this.props.fetchAllCategory().then((response)=>{
             if(response.data.status){
                 this.setState({allCategory:response.data.data},console.log('all cat:',this.state.allCategory));
@@ -49,17 +49,6 @@ class PostAdd extends React.Component{
         }).catch(error=>{
             console.log(error);
             this.setState({alertData:{status:false,msg:"获取栏目信息失败"}});
-        });
-
-        this.props.getUserInfo().then((response)=>{
-            if(response.data.status){
-                console.log('login user:',response.data.data);
-                this.setState({data: { ...this.state.data, authorId: response.data.data.uid }});
-
-            }
-        }).catch(error=>{
-            console.log(error);
-            this.setState({alertData:{status:false,msg:"获取用户信息失败"}});
         });
     }
 
@@ -244,4 +233,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps,{fetchAllCategory,uploadFile,getUserInfo,createPost})(PostAdd)
+export default connect(mapStateToProps,{fetchAllCategory,uploadFile,createPost})(PostAdd)

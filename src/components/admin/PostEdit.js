@@ -7,7 +7,6 @@ import Dropzone from 'react-dropzone';
 import {connect} from 'react-redux';
 import {fetchAllCategory} from '../../actions/categoryActions';
 import {uploadFile} from '../../actions/uploadActions';
-import {getUserInfo} from '../../actions/userActions';
 import {getPost,updatePost} from '../../actions/postActions';
 import YTEditor from '../editor/YTEditor';
 import PropTypes from "prop-types";
@@ -49,6 +48,9 @@ class PostEdit extends React.Component{
         this.props.getPost(postId).then((response)=>{
             if(response.data.status){
                 console.log('post edit:',response.data.data)
+                this.setState({
+                    data: { ...this.state.data, authorId:response.data.data.author.id}
+                });
                 this.setState({
                     data: { ...this.state.data, catId:response.data.data.category.id}
                 });
@@ -104,16 +106,6 @@ class PostEdit extends React.Component{
             this.setState({alertData:{status:false,msg:"获取栏目信息失败"}});
         });
 
-        this.props.getUserInfo().then((response)=>{
-            if(response.data.status){
-                console.log('login user:',response.data.data);
-                this.setState({data: { ...this.state.data, authorId: response.data.data.uid }});
-
-            }
-        }).catch(error=>{
-            console.log(error);
-            this.setState({alertData:{status:false,msg:"获取用户信息失败"}});
-        });
     }
 
     onChange(e){
@@ -298,4 +290,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps,{fetchAllCategory,uploadFile,getUserInfo,getPost,updatePost})(PostEdit)
+export default connect(mapStateToProps,{fetchAllCategory,uploadFile,getPost,updatePost})(PostEdit)
