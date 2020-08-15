@@ -22,7 +22,7 @@
     "redux-devtools-extension": "^2.13.7",
     "redux-thunk": "^2.3.0",
     "validator": "^10.10.0",
-    "yt-simplemde-editor": "^1.0.1"
+    "yt-simplemde-editor": "^3.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
