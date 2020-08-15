@@ -4,7 +4,7 @@
   "homepage": "http://118.24.127.237/react",
   "private": true,
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.19.2",
     "highlight.js": "^10.1.2",
     "marked": "^1.1.1",
     "prismjs": "1.14.0",
